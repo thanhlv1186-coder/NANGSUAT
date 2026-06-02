@@ -1,0 +1,20 @@
+{
+  "name": "dashboard-nang-suat-lap-dat",
+  "version": "1.0.0",
+  "description": "Dashboard Năng Suất Lắp Đặt - Điện Máy Xanh - dữ liệu tự động từ Excel",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "read-excel-file": "^9.0.10"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.0",
+    "vite": "^5.4.0"
+  }
+}
