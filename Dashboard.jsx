@@ -13,7 +13,7 @@ import { EXCEL_POLL_INTERVAL_MS, loadExcelDashboardData, getExcelFileName } from
 const sumML      = a => a.reduce((s,r)=>s+r[5],0);
 const sumSPK     = a => a.reduce((s,r)=>s+r[6],0);
 const avgML      = a => a.length ? Math.round(sumML(a)/a.length) : 0;
-const colorByLoai= l => l==="Nhân Viên"?"#00d4ff":l==="Cộng Tác Viên"?"#ff6b35":"#a78bfa";
+const colorByLoai= l => l==="Nhân Viên"?"#00d4ff":l==="Cộng Tác Viên"?"#ff6b35":l==="Tài xế"?"#f59e0b":"#a78bfa";
 const getLevel   = ml => {
   if(ml===0) return {label:"ML=0",cls:"b-bad"};
   if(ml<30)  return {label:"Thấp",cls:"b-bad"};
@@ -113,6 +113,7 @@ tbody td{padding:8px 9px;}
 .b-nv{background:rgba(0,212,255,.1);color:var(--accent);}
 .b-ctv{background:rgba(255,107,53,.1);color:var(--accent2);}
 .b-dt{background:rgba(167,139,250,.1);color:#a78bfa;}
+.b-tx{background:rgba(245,158,11,.1);color:#f59e0b;}
 .b-ok{background:rgba(34,197,94,.1);color:var(--accent3);}
 .b-warn{background:rgba(245,158,11,.1);color:var(--accent4);}
 .b-bad{background:rgba(239,68,68,.1);color:var(--danger);}
@@ -241,6 +242,7 @@ export default function Dashboard() {
   const nv   = d.filter(r=>r[2]==="Nhân Viên");
   const ctv  = d.filter(r=>r[2]==="Cộng Tác Viên");
   const dt   = d.filter(r=>r[2]==="8 - ĐỐI TÁC GHLĐ");
+  const tx   = d.filter(r=>r[2]==="Tài xế");
   const totalML  = sumML(d);
   const totalSPK = sumSPK(d);
   const zeroML   = d.filter(r=>r[5]===0).length;
@@ -266,7 +268,7 @@ export default function Dashboard() {
   const sorted  = [...d].filter(r=>r[5]>0).sort((a,b)=>b[5]-a[5]);
   const maxML2  = sorted.length ? sorted[0][5] : 1;
   const top10   = sorted.slice(0,10);
-  const lowBars = [...d].filter(r=>r[5]<50&&r[2]!=="8 - ĐỐI TÁC GHLĐ")
+  const lowBars = [...d].filter(r=>r[5]<50&&r[2]!=="8 - ĐỐI TÁC GHLĐ"&&r[2]!=="Tài xế")
                         .sort((a,b)=>a[5]-b[5]).slice(0,10);
 
   // ── daily rows ───────────────────────────────────────────────────────
@@ -290,7 +292,8 @@ export default function Dashboard() {
   const donutData = [
     {label:"Nhân Viên",    val:nv.length,  color:"#00d4ff"},
     {label:"Cộng Tác Viên",val:ctv.length, color:"#ff6b35"},
-    {label:"Đối Tác",       val:dt.length,  color:"#a78bfa"},
+    {label:"Tài xế",       val:tx.length,  color:"#f59e0b"},
+    {label:"Đối Tác",      val:dt.length,  color:"#a78bfa"},
   ];
   const donutTotal = donutData.reduce((s,x)=>s+x.val,0);
 
@@ -314,6 +317,7 @@ export default function Dashboard() {
   const compGroups = [
     {label:"NV",  ml:avgML(nv),  spk:nv.length?Math.round(sumSPK(nv)/nv.length):0,  c:"#00d4ff"},
     {label:"CTV", ml:avgML(ctv), spk:ctv.length?Math.round(sumSPK(ctv)/ctv.length):0, c:"#ff6b35"},
+    {label:"TX",  ml:avgML(tx),  spk:tx.length?Math.round(sumSPK(tx)/tx.length):0,   c:"#f59e0b"},
     {label:"ĐT",  ml:avgML(dt),  spk:dt.length?Math.round(sumSPK(dt)/dt.length):0,   c:"#a78bfa"},
   ];
   const maxComp = Math.max(...compGroups.flatMap(g=>[g.ml,g.spk]),1);
@@ -325,15 +329,16 @@ export default function Dashboard() {
   const tk = d.filter(r=>r[8]==="Tạm khóa");
   if(tk.length) alerts.push({t:"amber",i:"🔒",p:`${tk.length} nhân sự Tạm Khóa`,s:tk.map(r=>r[1]).join(", ")});
   const dtML = sumML(dt);
-  if(totalML>0) alerts.push({t:"amber",i:"💡",p:`Đối Tác: ${Math.round(dtML/totalML*100)}% tổng ML (${dt.length} người)`,s:`TB ML/ĐT=${avgML(dt)} | TB ML/NV=${avgML(nv)}`});
+  if(totalML>0) alerts.push({t:"amber",i:"💡",p:`ĐT: ${Math.round(dtML/totalML*100)}% tổng ML (${dt.length} người) · TX: ${tx.length} người`,s:`TB ML/ĐT=${avgML(dt)} | TX=${avgML(tx)} | NV=${avgML(nv)}`});
   if(!alerts.length) alerts.push({t:"green",i:"✅",p:"Không có cảnh báo đặc biệt",s:"Tất cả chỉ số trong ngưỡng bình thường"});
 
   // ── low table ────────────────────────────────────────────────────────
-  const lowTableRows = d.filter(r=>r[5]<=30&&r[2]!=="8 - ĐỐI TÁC GHLĐ").sort((a,b)=>a[5]-b[5]);
+  const lowTableRows = d.filter(r=>r[5]<=30&&r[2]!=="8 - ĐỐI TÁC GHLĐ"&&r[2]!=="Tài xế").sort((a,b)=>a[5]-b[5]);
 
   // ── vs chart ─────────────────────────────────────────────────────────
   const vsGroups = [
     {label:"Đối Tác (ĐT)", ml:sumML(dt),  cnt:dt.length,  color:"#a78bfa"},
+    {label:"Tài xế (TX)",  ml:sumML(tx),  cnt:tx.length,  color:"#f59e0b"},
     {label:"Nhân Viên",    ml:sumML(nv),  cnt:nv.length,  color:"#00d4ff"},
     {label:"Cộng Tác Viên",ml:sumML(ctv), cnt:ctv.length, color:"#ff6b35"},
   ];
@@ -416,10 +421,10 @@ export default function Dashboard() {
       {/* KPI */}
       <div className="kpi-row">
         {[
-          {c:"c1",label:"Tổng Nhân Sự",  val:d.length,            sub:`NV ${nv.length} · CTV ${ctv.length} · ĐT ${dt.length}`},
+          {c:"c1",label:"Tổng Nhân Sự",  val:d.length,            sub:`NV ${nv.length} · CTV ${ctv.length} · TX ${tx.length} · ĐT ${dt.length}`},
           {c:"c2",label:"Tổng ML",       val:totalML.toLocaleString(), sub:"Máy lạnh lắp đặt trong tháng"},
           {c:"c3",label:"Tổng SPK",      val:totalSPK.toLocaleString(),sub:"Sản phẩm khác"},
-          {c:"c4",label:"TB ML/Người",   val:avgML(d),              sub:`NV:${avgML(nv)} · CTV:${avgML(ctv)} · ĐT:${avgML(dt)}`},
+          {c:"c4",label:"TB ML/Người",   val:avgML(d),              sub:`NV:${avgML(nv)} · CTV:${avgML(ctv)} · TX:${avgML(tx)} · ĐT:${avgML(dt)}`},
           {c:"c5",label:"Cảnh Báo Thấp", val:zeroML+lowML,          sub:`ML=0: ${zeroML} · ML<50: ${lowML}`},
         ].map(k=>(
           <div key={k.label} className={`kpi ${k.c}`}>
@@ -437,8 +442,8 @@ export default function Dashboard() {
           <div className="bar-list">
             {top10.map(r=>{
               const pct=Math.round(r[5]/maxML2*100);
-              const lb=r[2]==="Nhân Viên"?"b-nv":r[2]==="Cộng Tác Viên"?"b-ctv":"b-dt";
-              const ll=r[2]==="Nhân Viên"?"NV":r[2]==="Cộng Tác Viên"?"CTV":"ĐT";
+              const lb=r[2]==="Nhân Viên"?"b-nv":r[2]==="Cộng Tác Viên"?"b-ctv":r[2]==="Tài xế"?"b-tx":"b-dt";
+              const ll=r[2]==="Nhân Viên"?"NV":r[2]==="Cộng Tác Viên"?"CTV":r[2]==="Tài xế"?"TX":"ĐT";
               return (
                 <div key={r[0]} className="bar-item">
                   <div className="bar-name" style={{minWidth:200}}>
@@ -485,6 +490,7 @@ export default function Dashboard() {
               <option value="">Tất cả loại</option>
               <option value="Nhân Viên">Nhân Viên</option>
               <option value="Cộng Tác Viên">Cộng Tác Viên</option>
+              <option value="Tài xế">Tài xế</option>
               <option value="8 - ĐỐI TÁC GHLĐ">Đối Tác</option>
             </select>
             <select value={selMuc} onChange={e=>setSelMuc(e.target.value)}>
@@ -560,7 +566,7 @@ export default function Dashboard() {
                 </div>
               ))}
               <div className="dl-item" style={{marginTop:4,paddingTop:7,borderTop:"1px solid var(--border)"}}>
-                <div className="dl-label" style={{fontSize:".63rem",width:"100%"}}>TB ML: NV={avgML(nv)} · CTV={avgML(ctv)} · ĐT={avgML(dt)}</div>
+                <div className="dl-label" style={{fontSize:".63rem",width:"100%"}}>TB ML: NV={avgML(nv)} · CTV={avgML(ctv)} · TX={avgML(tx)} · ĐT={avgML(dt)}</div>
               </div>
             </div>
           </div>
@@ -616,7 +622,7 @@ export default function Dashboard() {
                 ? <tr><td colSpan={10} style={{textAlign:"center",color:"var(--accent3)",padding:16}}>✅ Không có NV/CTV nào dưới ngưỡng trong vùng này</td></tr>
                 : lowTableRows.map((r,i)=>{
                     const color=r[5]===0?"#ef4444":"#f59e0b";
-                    const lb=r[2]==="Nhân Viên"?"b-nv":"b-ctv";
+                    const lb=r[2]==="Nhân Viên"?"b-nv":r[2]==="Tài xế"?"b-tx":"b-ctv";
                     const vb=r[3]==="DBSH"?"b-vung1":"b-vung2";
                     const nx=r[5]===0?"Không có đơn ML trong tháng":r[5]<10?"Rất thấp, cần xác minh":"Thấp, cần hỗ trợ";
                     return (

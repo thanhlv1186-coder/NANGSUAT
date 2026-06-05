@@ -135,6 +135,7 @@ function normalizeLoai(value) {
   if (normalized.includes("CONG TAC VIEN")) return "Cộng Tác Viên";
   if (normalized.includes("NHAN VIEN")) return "Nhân Viên";
   if (normalized.includes("DOI TAC")) return "8 - ĐỐI TÁC GHLĐ";
+  if (normalized.includes("TAI XE")) return "Tài xế";
   return raw;
 }
 
