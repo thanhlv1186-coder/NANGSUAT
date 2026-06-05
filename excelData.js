@@ -187,11 +187,22 @@ function buildMeta(dailyColumns) {
   };
 }
 
+const GENERIC_FILE_NAME = "NANG SUAT.xlsx";
+const GENERIC_FILE_URL  = `${import.meta.env.BASE_URL}${encodeURIComponent(GENERIC_FILE_NAME)}`;
+
 export async function loadExcelDashboardData(month) {
   const fileName = getExcelFileName(month);
-  const response = await fetch(cacheBustedUrl(month), { cache: "no-store" });
+
+  // Thử load file theo tháng trước, nếu không có thì dùng file gốc
+  let response = await fetch(cacheBustedUrl(month), { cache: "no-store" });
+  let usedFileName = fileName;
+
   if (!response.ok) {
-    throw new Error(`Không tìm thấy ${fileName} (${response.status})`);
+    response = await fetch(`${GENERIC_FILE_URL}?v=${Date.now()}`, { cache: "no-store" });
+    usedFileName = GENERIC_FILE_NAME;
+    if (!response.ok) {
+      throw new Error(`Không tìm thấy ${fileName} (${response.status})`);
+    }
   }
 
   const buffer = await response.arrayBuffer();
@@ -204,14 +215,14 @@ export async function loadExcelDashboardData(month) {
   }
 
   if (!Array.isArray(rows) || rows.length < 3) {
-    throw new Error(`${fileName} không có đủ dữ liệu để dựng dashboard`);
+    throw new Error(`${usedFileName} không có đủ dữ liệu để dựng dashboard`);
   }
 
   const [headerRow = [], subHeaderRow = [], ...dataRows] = rows;
   const dailyColumns = buildDailyColumns(headerRow, subHeaderRow);
 
   if (!dailyColumns.length) {
-    throw new Error(`${fileName} thiếu cặp cột ngày ML/SPK`);
+    throw new Error(`${usedFileName} thiếu cặp cột ngày ML/SPK`);
   }
 
   const khoLabel = { ...FALLBACK_KHO_LABEL };
@@ -253,7 +264,7 @@ export async function loadExcelDashboardData(month) {
   }
 
   if (!raw.length) {
-    throw new Error(`${EXCEL_FILE_NAME} không có dòng nhân sự hợp lệ`);
+    throw new Error(`${usedFileName} không có dòng nhân sự hợp lệ`);
   }
 
   return {
@@ -262,7 +273,7 @@ export async function loadExcelDashboardData(month) {
     khoLabel,
     vungInfo,
     meta: buildMeta(dailyColumns),
-    source: fileName,
+    source: usedFileName,
     loadedAt: new Date().toISOString(),
   };
 }
