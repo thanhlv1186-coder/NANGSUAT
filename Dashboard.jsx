@@ -166,7 +166,10 @@ export default function Dashboard() {
     let cancelled = false;
 
     const refreshExcel = async ({ silent = false } = {}) => {
-      if (!silent) setDataStatus(prev => ({ ...prev, loading: true }));
+      if (!silent) {
+        setDataStatus(prev => ({ ...prev, loading: true }));
+        setDashboardData(FALLBACK_DASHBOARD_DATA);
+      }
 
       try {
         const nextData = await loadExcelDashboardData(selectedMonth);
@@ -177,6 +180,7 @@ export default function Dashboard() {
       } catch (error) {
         if (cancelled) return;
 
+        setDashboardData(FALLBACK_DASHBOARD_DATA);
         setDataStatus({
           loading: false,
           error: error?.message || "Không đọc được file Excel",
