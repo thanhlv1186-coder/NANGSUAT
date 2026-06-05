@@ -36,6 +36,22 @@ const FALLBACK_DASHBOARD_DATA = {
   loadedAt: null,
 };
 
+const emptyMonthData = (month) => ({
+  raw: [],
+  daily: [],
+  khoLabel: FALLBACK_KHO_LABEL,
+  vungInfo: FALLBACK_VUNG_INFO,
+  meta: {
+    month,
+    year: new Date().getFullYear(),
+    nDays: 0,
+    days: [],
+    label: `Tháng ${String(month).padStart(2,"0")}/${new Date().getFullYear()}`,
+  },
+  source: getExcelFileName(month),
+  loadedAt: null,
+});
+
 // ── CSS-in-JS (paste toàn bộ CSS từ HTML vào đây) ─────────────────────────
 const STYLES = `
 @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
@@ -168,7 +184,7 @@ export default function Dashboard() {
     const refreshExcel = async ({ silent = false } = {}) => {
       if (!silent) {
         setDataStatus(prev => ({ ...prev, loading: true }));
-        setDashboardData(FALLBACK_DASHBOARD_DATA);
+        setDashboardData(emptyMonthData(selectedMonth));
       }
 
       try {
@@ -180,10 +196,10 @@ export default function Dashboard() {
       } catch (error) {
         if (cancelled) return;
 
-        setDashboardData(FALLBACK_DASHBOARD_DATA);
+        setDashboardData(emptyMonthData(selectedMonth));
         setDataStatus({
           loading: false,
-          error: error?.message || "Không đọc được file Excel",
+          error: error?.message || `Chưa có dữ liệu tháng ${selectedMonth}`,
         });
       }
     };
