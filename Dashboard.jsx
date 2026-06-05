@@ -7,7 +7,7 @@ import {
   RAW as FALLBACK_RAW,
   DAILY as FALLBACK_DAILY,
 } from "./data.js";
-import { EXCEL_POLL_INTERVAL_MS, loadExcelDashboardData } from "./excelData.js";
+import { EXCEL_POLL_INTERVAL_MS, loadExcelDashboardData, getExcelFileName } from "./excelData.js";
 
 // ── helpers ────────────────────────────────────────────────────────────────
 const sumML      = a => a.reduce((s,r)=>s+r[5],0);
@@ -128,6 +128,11 @@ tbody td{padding:8px 9px;}
 .tag-ml{width:9px;height:9px;border-radius:2px;background:var(--accent);display:inline-block;}
 .tag-spk{width:9px;height:9px;border-radius:2px;background:var(--accent2);display:inline-block;}
 .footer{text-align:center;font-size:.63rem;color:var(--muted);margin-top:22px;padding-top:14px;border-top:1px solid var(--border);}
+.month-bar{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
+.month-btn{padding:5px 11px;border-radius:7px;font-size:.72rem;cursor:pointer;font-family:'Be Vietnam Pro';border:1px solid var(--border);background:var(--surface2);color:var(--muted);transition:all .18s;white-space:nowrap;min-width:38px;text-align:center;}
+.month-btn:hover{border-color:rgba(0,212,255,.4);color:var(--text);}
+.month-btn.active{background:rgba(0,212,255,.12);border-color:rgba(0,212,255,.45);color:var(--accent);font-weight:700;}
+.month-btn.no-data{opacity:.4;cursor:default;}
 @media(max-width:900px){.kpi-row{grid-template-columns:repeat(3,1fr);}.row2,.row3{grid-template-columns:1fr;}}
 `;
 
@@ -135,6 +140,7 @@ tbody td{padding:8px 9px;}
 // MAIN COMPONENT
 // ══════════════════════════════════════════════════════════════════════════
 export default function Dashboard() {
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [activeVung, setActiveVung] = useState("ALL");
   const [dailyType, setDailyType]   = useState("ML");
   const [dailyKho,  setDailyKho]    = useState("");
@@ -163,7 +169,7 @@ export default function Dashboard() {
       if (!silent) setDataStatus(prev => ({ ...prev, loading: true }));
 
       try {
-        const nextData = await loadExcelDashboardData();
+        const nextData = await loadExcelDashboardData(selectedMonth);
         if (cancelled) return;
 
         setDashboardData(nextData);
@@ -185,7 +191,7 @@ export default function Dashboard() {
       cancelled = true;
       window.clearInterval(intervalId);
     };
-  }, []);
+  }, [selectedMonth]);
 
   const RAW = dashboardData.raw;
   const DAILY = dashboardData.daily;
@@ -199,6 +205,12 @@ export default function Dashboard() {
   useEffect(() => {
     if (!VUNG_INFO[activeVung]) setActiveVung("ALL");
   }, [VUNG_INFO, activeVung]);
+
+  // Reset kho filter khi đổi tháng
+  useEffect(() => {
+    setDailyKho("");
+    setSelKho("");
+  }, [selectedMonth]);
 
   // ── derived data ─────────────────────────────────────────────────────
   const getData = useCallback(() =>
@@ -352,6 +364,21 @@ export default function Dashboard() {
         </div>
         <div className="badge-live" title={dataStatusTitle}><span className="dot-live"></span> {dataStatusText}</div>
       </header>
+
+      {/* MONTH SELECTOR */}
+      <div className="month-bar">
+        <span className="vung-label">📅 Chọn tháng:</span>
+        {Array.from({length:12},(_,i)=>i+1).map(m=>(
+          <button key={m}
+            className={`month-btn${selectedMonth===m?" active":""}`}
+            onClick={()=>setSelectedMonth(m)}>
+            T{m}
+          </button>
+        ))}
+        <span style={{fontSize:".68rem",color:"var(--muted)",marginLeft:"auto",background:"var(--surface2)",padding:"4px 10px",borderRadius:6,border:"1px solid var(--border)"}}>
+          File: {getExcelFileName(selectedMonth)}
+        </span>
+      </div>
 
       {/* VUNG SELECTOR */}
       <div className="vung-bar">

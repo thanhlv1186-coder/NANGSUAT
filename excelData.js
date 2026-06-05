@@ -5,10 +5,16 @@ import {
   VUNG_INFO as FALLBACK_VUNG_INFO,
 } from "./data.js";
 
-export const EXCEL_FILE_NAME = "NANG SUAT.xlsx";
 export const EXCEL_POLL_INTERVAL_MS = 30_000;
 
-const EXCEL_FILE_URL = `${import.meta.env.BASE_URL}${encodeURIComponent(EXCEL_FILE_NAME)}`;
+export function getExcelFileName(month) {
+  return month ? `NANG SUAT T${month}.xlsx` : "NANG SUAT.xlsx";
+}
+
+function getExcelFileUrl(month) {
+  const fileName = getExcelFileName(month);
+  return `${import.meta.env.BASE_URL}${encodeURIComponent(fileName)}`;
+}
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 const COLORS_BY_VUNG = {
@@ -33,8 +39,8 @@ const COL = {
   spk: 9,
 };
 
-function cacheBustedUrl() {
-  return `${EXCEL_FILE_URL}?v=${Date.now()}`;
+function cacheBustedUrl(month) {
+  return `${getExcelFileUrl(month)}?v=${Date.now()}`;
 }
 
 function text(value) {
@@ -181,10 +187,11 @@ function buildMeta(dailyColumns) {
   };
 }
 
-export async function loadExcelDashboardData() {
-  const response = await fetch(cacheBustedUrl(), { cache: "no-store" });
+export async function loadExcelDashboardData(month) {
+  const fileName = getExcelFileName(month);
+  const response = await fetch(cacheBustedUrl(month), { cache: "no-store" });
   if (!response.ok) {
-    throw new Error(`Không tìm thấy ${EXCEL_FILE_NAME} (${response.status})`);
+    throw new Error(`Không tìm thấy ${fileName} (${response.status})`);
   }
 
   const buffer = await response.arrayBuffer();
@@ -197,14 +204,14 @@ export async function loadExcelDashboardData() {
   }
 
   if (!Array.isArray(rows) || rows.length < 3) {
-    throw new Error(`${EXCEL_FILE_NAME} không có đủ dữ liệu để dựng dashboard`);
+    throw new Error(`${fileName} không có đủ dữ liệu để dựng dashboard`);
   }
 
   const [headerRow = [], subHeaderRow = [], ...dataRows] = rows;
   const dailyColumns = buildDailyColumns(headerRow, subHeaderRow);
 
   if (!dailyColumns.length) {
-    throw new Error(`${EXCEL_FILE_NAME} thiếu cặp cột ngày ML/SPK`);
+    throw new Error(`${fileName} thiếu cặp cột ngày ML/SPK`);
   }
 
   const khoLabel = { ...FALLBACK_KHO_LABEL };
@@ -255,7 +262,7 @@ export async function loadExcelDashboardData() {
     khoLabel,
     vungInfo,
     meta: buildMeta(dailyColumns),
-    source: EXCEL_FILE_NAME,
+    source: fileName,
     loadedAt: new Date().toISOString(),
   };
 }
