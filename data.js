@@ -14,9 +14,15 @@ export const META = {
 };
 
 export const VUNG_INFO = {
-  ALL:  { name: 'Tất cả vùng',         color: '#00d4ff' },
-  DBSH: { name: 'Đồng Bằng Sông Hồng', color: '#00d4ff' },
-  DTB:  { name: 'Đông Tây Bắc',         color: '#a78bfa' },
+  ALL:  { name: 'Tất cả vùng',          color: '#00d4ff' },
+  DBSH: { name: 'Đồng Bằng Sông Hồng',  color: '#00d4ff' },
+  DTB:  { name: 'Đông Tây Bắc',          color: '#a78bfa' },
+  'HN+': { name: 'Vùng Hà Nội +',         color: '#22c55e' },
+  HCM:  { name: 'Vùng Hồ Chí Minh',      color: '#f59e0b' },
+  DCN:  { name: 'Vùng Đông Cao Nguyên',  color: '#ec4899' },
+  TB:   { name: 'Vùng Trung Bộ',          color: '#14b8a6' },
+  DH:   { name: 'Vùng Duyên Hải',         color: '#8b5cf6' },
+  TNB:  { name: 'Vùng Tây Nam Bộ',        color: '#f97316' },
 };
 
 export const KHO_LABEL = {
