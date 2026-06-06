@@ -29,6 +29,7 @@ const TEXT_BY_VUNG = {
 
 const COL = {
   vung: 0,
+  khoMaCode: 1,
   khoName: 2,
   uid: 3,
   name: 4,
@@ -237,7 +238,9 @@ export async function loadExcelDashboardData(month) {
   for (const row of dataRows) {
     if (!row || isEmpty(row[COL.uid]) || isEmpty(row[COL.name])) continue;
 
-    const { code: khoCode, label: khoName } = khoFromName(row[COL.khoName]);
+    const { code: khoCodeFallback, label: khoName } = khoFromName(row[COL.khoName]);
+    const maKho = text(row[COL.khoMaCode]);
+    const khoCode = maKho || khoCodeFallback;
     const vungCode = codeFromVung(row[COL.vung]);
     const uid = normalizeUid(row[COL.uid]);
     const mlByDay = dailyColumns.map((col) => roundHalfEven(row[col.mlCol]));
