@@ -400,7 +400,6 @@ export default function Dashboard() {
             T{m}
           </button>
         ))}
-        </span>
       </div>
 
       {/* VUNG SELECTOR */}
