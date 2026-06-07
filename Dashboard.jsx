@@ -746,4 +746,17 @@ export default function Dashboard() {
               const share=d.length?Math.round(b.cnt/d.length*100):0;
               return (
                 <div key={b.label} className="bar-item">
-                  <div clas
+                  <div className="bar-name" style={{minWidth:64,fontFamily:"JetBrains Mono",fontSize:".66rem"}}>{b.label}</div>
+                  <div className="bar-track"><div className="bar-fill" style={{width:`${Math.max(pct,2)}%`,background:b.color}}></div></div>
+                  <div className="bar-val" style={{color:b.color,minWidth:72}}>{b.cnt} người <span style={{color:"var(--muted)",fontSize:".58rem"}}>({share}%)</span></div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      <div className="footer">Design 34661 - Lê Văn Thanh · Bộ phận Vận Hành &amp; Quản Lý Dữ Liệu · {META.label}</div>
+    </div>
+  );
+}
