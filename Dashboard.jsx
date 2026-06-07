@@ -648,7 +648,7 @@ export default function Dashboard() {
           <div className="panel-title" style={{marginBottom:0}}>📅 <span>Chi Tiết</span> Đơn Hàng Theo Ngày — {META.label}</div>
           <div style={{display:"flex",gap:8,marginLeft:"auto",alignItems:"center",flexWrap:"wrap"}}>
             <select value={dailyKho} onChange={e=>setDailyKho(e.target.value)}
-              style={{background:"#002060",border:"1px solid var(--border)",color:"var(--text)",padding:"6px 10px",borderRadius:7,fontSize:".72rem",fontFamily:"Be Vietnam Pro",outline:"none",cursor:"pointer"}}>
+              style={{background:"var(--surface2)",border:"1px solid var(--border)",color:"var(--text)",padding:"6px 10px",borderRadius:7,fontSize:".72rem",fontFamily:"Be Vietnam Pro",outline:"none",cursor:"pointer"}}>
               <option value="">— Chọn kho để xem chi tiết theo ngày —</option>
               {khoList.map(k=><option key={k} value={k}>{KHO_LABEL[k]||k} ({k})</option>)}
             </select>
@@ -734,7 +734,7 @@ export default function Dashboard() {
               );
             })}
           </div>
-          <div style={{marginTop:14,padding:10,background:"#002060",borderRadius:8,fontSize:".7rem",color:"var(--muted)"}}>
+          <div style={{marginTop:14,padding:10,background:"var(--surface2)",borderRadius:8,fontSize:".7rem",color:"var(--muted)"}}>
             ⚡ <span style={{color:"var(--text)"}}>ĐT chiếm <strong style={{color:"#000"}}>{totalML>0?Math.round(sumML(dt)/totalML*100):0}%</strong> tổng ML với {dt.length} người. TB ML/ĐT=<strong style={{color:"#000"}}>{avgML(dt)}</strong> vs NV=<strong style={{color:"#000"}}>{avgML(nv)}</strong>.</span>
           </div>
         </div>
@@ -757,6 +757,4 @@ export default function Dashboard() {
       </div>
 
       <div className="footer">Design 34661 - Lê Văn Thanh · Bộ phận Vận Hành &amp; Quản Lý Dữ Liệu · {META.label}</div>
-    </div>
-  );
-}
+  
