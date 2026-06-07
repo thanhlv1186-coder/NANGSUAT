@@ -252,42 +252,4 @@ export async function loadExcelDashboardData(month) {
     // (vd: nhân viên 44926 hiển thị Tổng ML = 58 nhưng cộng dồn theo ngày chỉ
     // ra 13 — đó chính là tổng của tháng trước bị "dính" lại).
     // => Luôn tính lại Tổng ML/SPK bằng cách cộng dồn từ dữ liệu theo ngày,
-    // để con số hiển thị luôn khớp và phản ánh đúng dữ liệu tháng hiện tại.
-    const totalMlFromDaily = mlByDay.reduce((sum, value) => sum + value, 0);
-    const totalSpkFromDaily = spkByDay.reduce((sum, value) => sum + value, 0);
-
-    khoLabel[khoCode] = khoLabel[khoCode] || khoName;
-    vungInfo[vungCode] = vungInfo[vungCode] || {
-      name: TEXT_BY_VUNG[vungCode] || text(row[COL.vung]) || vungCode,
-      color: COLORS_BY_VUNG[vungCode] || "#22c55e",
-    };
-
-    raw.push([
-      uid,
-      text(row[COL.name]),
-      normalizeLoai(row[COL.loai]),
-      vungCode,
-      khoCode,
-      totalMlFromDaily,
-      totalSpkFromDaily,
-      roundHalfEven(row[COL.tongQD]),
-      normalizeTrangThai(row[COL.trangThai]),
-    ]);
-
-    daily.push([uid, khoCode, mlByDay, spkByDay]);
-  }
-
-  if (!raw.length) {
-    throw new Error(`${usedFileName} không có dòng nhân sự hợp lệ`);
-  }
-
-  return {
-    raw,
-    daily,
-    khoLabel,
-    vungInfo,
-    meta: buildMeta(dailyColumns),
-    source: usedFileName,
-    loadedAt: new Date().toISOString(),
-  };
-}
+    // để 
