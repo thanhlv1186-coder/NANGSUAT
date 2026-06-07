@@ -399,7 +399,6 @@ export default function Dashboard() {
             T{m}
           </button>
         ))}
-        </span>
       </div>
 
       {/* VUNG SELECTOR */}
@@ -747,4 +746,4 @@ export default function Dashboard() {
               const share=d.length?Math.round(b.cnt/d.length*100):0;
               return (
                 <div key={b.label} className="bar-item">
-          
+                  <div clas
