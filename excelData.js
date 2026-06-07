@@ -29,6 +29,7 @@ const TEXT_BY_VUNG = {
 
 const COL = {
   vung: 0,
+  khoMaCode: 1,
   khoName: 2,
   uid: 3,
   name: 4,
@@ -237,11 +238,23 @@ export async function loadExcelDashboardData(month) {
   for (const row of dataRows) {
     if (!row || isEmpty(row[COL.uid]) || isEmpty(row[COL.name])) continue;
 
-    const { code: khoCode, label: khoName } = khoFromName(row[COL.khoName]);
+    const { code: khoCodeFallback, label: khoName } = khoFromName(row[COL.khoName]);
+    const maKho = text(row[COL.khoMaCode]);
+    const khoCode = maKho || khoCodeFallback;
     const vungCode = codeFromVung(row[COL.vung]);
     const uid = normalizeUid(row[COL.uid]);
     const mlByDay = dailyColumns.map((col) => roundHalfEven(row[col.mlCol]));
     const spkByDay = dailyColumns.map((col) => roundHalfEven(row[col.spkCol]));
+
+    // Cột "Tổng ML" / "Tổng SPK" trong file Excel nguồn đôi khi bị giữ nguyên
+    // giá trị của tháng trước (không được hệ thống cập nhật lại khi sang tháng
+    // mới), dẫn tới lệch hẳn so với tổng cộng dồn từ các cột ML/SPK theo ngày
+    // (vd: nhân viên 44926 hiển thị Tổng ML = 58 nhưng cộng dồn theo ngày chỉ
+    // ra 13 — đó chính là tổng của tháng trước bị "dính" lại).
+    // => Luôn tính lại Tổng ML/SPK bằng cách cộng dồn từ dữ liệu theo ngày,
+    // để con số hiển thị luôn khớp và phản ánh đúng dữ liệu tháng hiện tại.
+    const totalMlFromDaily = mlByDay.reduce((sum, value) => sum + value, 0);
+    const totalSpkFromDaily = spkByDay.reduce((sum, value) => sum + value, 0);
 
     khoLabel[khoCode] = khoLabel[khoCode] || khoName;
     vungInfo[vungCode] = vungInfo[vungCode] || {
@@ -255,8 +268,8 @@ export async function loadExcelDashboardData(month) {
       normalizeLoai(row[COL.loai]),
       vungCode,
       khoCode,
-      roundHalfEven(row[COL.ml]),
-      roundHalfEven(row[COL.spk]),
+      totalMlFromDaily,
+      totalSpkFromDaily,
       roundHalfEven(row[COL.tongQD]),
       normalizeTrangThai(row[COL.trangThai]),
     ]);

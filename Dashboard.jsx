@@ -400,8 +400,6 @@ export default function Dashboard() {
             T{m}
           </button>
         ))}
-        <span style={{fontSize:".68rem",color:"var(--muted)",marginLeft:"auto",background:"var(--surface2)",padding:"4px 10px",borderRadius:6,border:"1px solid var(--border)"}}>
-          File: {getExcelFileName(selectedMonth)}
         </span>
       </div>
 
