@@ -93,8 +93,8 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;}
 .row3{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:18px;}
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;overflow:hidden;}
-.panel-title{font-size:.76rem;text-transform:uppercase;letter-spacing:1px;color:#000;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-shrink:0;}
-.panel-title span{color:#000;}
+.panel-title{font-size:.76rem;text-transform:uppercase;letter-spacing:1px;color:#ffc000;font-weight:700;background:#002060;padding:9px 12px;border-radius:6px;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.panel-title span{color:#ffc000;}
 .bar-list{display:flex;flex-direction:column;gap:7px;}
 .bar-item{display:flex;align-items:center;gap:10px;}
 .bar-name{font-size:.7rem;color:var(--text);min-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -105,7 +105,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .tbl-wrap::-webkit-scrollbar{width:4px;height:4px;}
 .tbl-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
 table{width:100%;border-collapse:collapse;font-size:.7rem;}
-thead th{position:sticky;top:0;z-index:2;background:var(--surface2);padding:9px 9px;text-align:left;font-weight:700;color:#000;text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border);}
+thead th{position:sticky;top:0;z-index:2;background:#002060;padding:9px 9px;text-align:left;font-weight:700;color:#ffc000;text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid #002060;}
 tbody tr{border-bottom:1px solid rgba(16,37,79,.08);transition:background .15s;}
 tbody tr:hover{background:var(--surface2);}
 tbody td{padding:8px 9px;color:#000;}
@@ -648,7 +648,7 @@ export default function Dashboard() {
           <div className="panel-title" style={{marginBottom:0}}>📅 <span>Chi Tiết</span> Đơn Hàng Theo Ngày — {META.label}</div>
           <div style={{display:"flex",gap:8,marginLeft:"auto",alignItems:"center",flexWrap:"wrap"}}>
             <select value={dailyKho} onChange={e=>setDailyKho(e.target.value)}
-              style={{background:"var(--surface2)",border:"1px solid var(--border)",color:"var(--text)",padding:"6px 10px",borderRadius:7,fontSize:".72rem",fontFamily:"Be Vietnam Pro",outline:"none",cursor:"pointer"}}>
+              style={{background:"#002060",border:"1px solid var(--border)",color:"var(--text)",padding:"6px 10px",borderRadius:7,fontSize:".72rem",fontFamily:"Be Vietnam Pro",outline:"none",cursor:"pointer"}}>
               <option value="">— Chọn kho để xem chi tiết theo ngày —</option>
               {khoList.map(k=><option key={k} value={k}>{KHO_LABEL[k]||k} ({k})</option>)}
             </select>
@@ -679,11 +679,11 @@ export default function Dashboard() {
               <table style={{width:"100%",borderCollapse:"collapse",fontSize:".68rem",whiteSpace:"nowrap"}}>
                 <thead>
                   <tr>
-                    <th style={{position:"sticky",left:0,zIndex:3,background:"var(--surface2)",minWidth:56,padding:"8px",textAlign:"center",fontSize:".63rem",color:"#000",fontWeight:700,borderBottom:"1px solid var(--border)",borderRight:"1px solid var(--border)"}}>User</th>
-                    <th style={{position:"sticky",left:56,zIndex:3,background:"var(--surface2)",minWidth:140,padding:"8px",fontSize:".63rem",color:"#000",fontWeight:700,borderBottom:"1px solid var(--border)",borderRight:"1px solid var(--border)"}}>Họ &amp; Tên</th>
-                    <th style={{position:"sticky",left:196,zIndex:3,background:"var(--surface2)",minWidth:38,padding:"8px 6px",textAlign:"center",fontSize:".63rem",color:"#000",fontWeight:700,borderBottom:"1px solid var(--border)",borderRight:"1px solid var(--border)"}}>Loại</th>
-                    {dailyDays.map(d=><th key={d} style={{background:"var(--surface2)",minWidth:30,padding:"8px 3px",textAlign:"center",fontSize:".63rem",color:"#000",fontWeight:700,borderBottom:"1px solid var(--border)"}}>{d}</th>)}
-                    <th style={{position:"sticky",right:0,zIndex:3,background:"var(--surface2)",minWidth:48,padding:"8px 6px",textAlign:"center",fontSize:".63rem",color:"#000",fontWeight:700,borderBottom:"1px solid var(--border)",borderLeft:"1px solid var(--border)"}}>∑{dailyType}</th>
+                    <th style={{position:"sticky",left:0,zIndex:3,background:"#002060",minWidth:56,padding:"8px",textAlign:"center",fontSize:".63rem",color:"#ffc000",fontWeight:700,borderBottom:"1px solid var(--border)",borderRight:"1px solid var(--border)"}}>User</th>
+                    <th style={{position:"sticky",left:56,zIndex:3,background:"#002060",minWidth:140,padding:"8px",fontSize:".63rem",color:"#ffc000",fontWeight:700,borderBottom:"1px solid var(--border)",borderRight:"1px solid var(--border)"}}>Họ &amp; Tên</th>
+                    <th style={{position:"sticky",left:196,zIndex:3,background:"#002060",minWidth:38,padding:"8px 6px",textAlign:"center",fontSize:".63rem",color:"#ffc000",fontWeight:700,borderBottom:"1px solid var(--border)",borderRight:"1px solid var(--border)"}}>Loại</th>
+                    {dailyDays.map(d=><th key={d} style={{background:"#002060",minWidth:30,padding:"8px 3px",textAlign:"center",fontSize:".63rem",color:"#ffc000",fontWeight:700,borderBottom:"1px solid var(--border)"}}>{d}</th>)}
+                    <th style={{position:"sticky",right:0,zIndex:3,background:"#002060",minWidth:48,padding:"8px 6px",textAlign:"center",fontSize:".63rem",color:"#ffc000",fontWeight:700,borderBottom:"1px solid var(--border)",borderLeft:"1px solid var(--border)"}}>∑{dailyType}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -734,7 +734,7 @@ export default function Dashboard() {
               );
             })}
           </div>
-          <div style={{marginTop:14,padding:10,background:"var(--surface2)",borderRadius:8,fontSize:".7rem",color:"var(--muted)"}}>
+          <div style={{marginTop:14,padding:10,background:"#002060",borderRadius:8,fontSize:".7rem",color:"var(--muted)"}}>
             ⚡ <span style={{color:"var(--text)"}}>ĐT chiếm <strong style={{color:"#000"}}>{totalML>0?Math.round(sumML(dt)/totalML*100):0}%</strong> tổng ML với {dt.length} người. TB ML/ĐT=<strong style={{color:"#000"}}>{avgML(dt)}</strong> vs NV=<strong style={{color:"#000"}}>{avgML(nv)}</strong>.</span>
           </div>
         </div>
