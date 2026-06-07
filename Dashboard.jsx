@@ -757,4 +757,6 @@ export default function Dashboard() {
       </div>
 
       <div className="footer">Design 34661 - Lê Văn Thanh · Bộ phận Vận Hành &amp; Quản Lý Dữ Liệu · {META.label}</div>
-  
+    </div>
+  );
+}
