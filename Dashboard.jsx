@@ -93,22 +93,22 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;}
 .row3{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:18px;}
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;overflow:hidden;}
-.panel-title{font-size:.76rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-shrink:0;}
-.panel-title span{color:var(--accent);}
+.panel-title{font-size:.76rem;text-transform:uppercase;letter-spacing:1px;color:#000;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.panel-title span{color:#000;}
 .bar-list{display:flex;flex-direction:column;gap:7px;}
 .bar-item{display:flex;align-items:center;gap:10px;}
 .bar-name{font-size:.7rem;color:var(--text);min-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .bar-track{flex:1;height:7px;background:var(--surface2);border-radius:4px;overflow:hidden;}
 .bar-fill{height:100%;border-radius:4px;transition:width .8s cubic-bezier(.4,0,.2,1);}
-.bar-val{font-size:.68rem;font-family:'JetBrains Mono';color:var(--muted);min-width:34px;text-align:right;}
+.bar-val{font-size:.68rem;font-family:'JetBrains Mono';color:#000;min-width:34px;text-align:right;}
 .tbl-wrap{overflow-x:auto;height:528px;overflow-y:auto;}
 .tbl-wrap::-webkit-scrollbar{width:4px;height:4px;}
 .tbl-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
 table{width:100%;border-collapse:collapse;font-size:.7rem;}
-thead th{position:sticky;top:0;z-index:2;background:var(--surface2);padding:9px 9px;text-align:left;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border);}
+thead th{position:sticky;top:0;z-index:2;background:var(--surface2);padding:9px 9px;text-align:left;font-weight:700;color:#000;text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border);}
 tbody tr{border-bottom:1px solid rgba(16,37,79,.08);transition:background .15s;}
 tbody tr:hover{background:var(--surface2);}
-tbody td{padding:8px 9px;}
+tbody td{padding:8px 9px;color:#000;}
 .badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:.63rem;font-weight:600;white-space:nowrap;}
 .b-nv{background:rgba(0,32,96,.1);color:var(--accent);}
 .b-ctv{background:rgba(255,192,0,.18);color:var(--gold-ink);}
@@ -127,7 +127,7 @@ tbody td{padding:8px 9px;}
 .dl-item{display:flex;align-items:center;gap:8px;}
 .dl-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
 .dl-label{font-size:.7rem;color:var(--muted);}
-.dl-val{font-size:.78rem;font-weight:700;margin-left:auto;padding-left:10px;font-family:'JetBrains Mono';}
+.dl-val{font-size:.78rem;font-weight:700;margin-left:auto;padding-left:10px;font-family:'JetBrains Mono';color:#000;}
 .alert-list{display:flex;flex-direction:column;gap:7px;}
 .alert-item{display:flex;align-items:flex-start;gap:9px;background:var(--surface2);border-radius:7px;padding:9px 11px;border-left:3px solid;}
 .alert-item.red{border-color:var(--danger);}
@@ -468,7 +468,7 @@ export default function Dashboard() {
                         {r[1]} <span style={{fontSize:".6rem",color:"var(--muted)"}}>({r[2]==="Nhân Viên"?"NV":"CTV"}·{r[4]})</span>
                       </div>
                       <div className="bar-track"><div className="bar-fill" style={{width:`${Math.max(pct,3)}%`,background:color}}></div></div>
-                      <div className="bar-val" style={{color}}>{r[5]}</div>
+                      <div className="bar-val" style={{color:"#000"}}>{r[5]}</div>
                     </div>
                   );
                 })
@@ -523,16 +523,16 @@ export default function Dashboard() {
                   const hl=searchUID&&String(r[0]).includes(searchUID);
                   return (
                     <tr key={r[0]}>
-                      <td style={{color:"var(--muted)"}}>{i+1}</td>
+                      <td style={{color:"#000"}}>{i+1}</td>
                       <td style={{fontFamily:"JetBrains Mono",fontSize:".68rem"}}>
-                        <span style={{background:hl?"rgba(0,32,96,.18)":undefined,color:"var(--accent)",borderRadius:hl?3:undefined,padding:hl?"1px 3px":undefined}}>{r[0]}</span>
+                        <span style={{background:hl?"rgba(0,32,96,.18)":undefined,color:"#000",borderRadius:hl?3:undefined,padding:hl?"1px 3px":undefined}}>{r[0]}</span>
                       </td>
                       <td><strong>{r[1]}</strong></td>
                       <td><span className={`badge ${lb}`}>{ll}</span></td>
                       <td><span className={`badge ${vb}`}>{vl}</span></td>
                       <td style={{color:"var(--muted)",fontSize:".66rem"}}>{KHO_LABEL[r[4]]||r[4]}</td>
-                      <td><strong style={{color,fontFamily:"JetBrains Mono"}}>{r[5]}</strong></td>
-                      <td style={{fontFamily:"JetBrains Mono",color:"var(--accent2)"}}>{r[6]}</td>
+                      <td><strong style={{color:"#000",fontFamily:"JetBrains Mono"}}>{r[5]}</strong></td>
+                      <td style={{fontFamily:"JetBrains Mono",color:"#000"}}>{r[6]}</td>
                       <td style={{fontFamily:"JetBrains Mono"}}>{r[7].toLocaleString()}</td>
                       <td><span className={`badge ${lv.cls}`}>{lv.label}</span></td>
                       <td><span className="mini-bar"><span className="mini-fill" style={{width:`${pct}%`,background:color,display:"block"}}></span></span></td>
@@ -558,7 +558,7 @@ export default function Dashboard() {
                 <div key={x.label} className="dl-item">
                   <div className="dl-dot" style={{background:x.color}}></div>
                   <div className="dl-label">{x.label}</div>
-                  <div className="dl-val" style={{color:x.color}}>{x.val} <small style={{fontSize:".58rem",color:"var(--muted)"}}>({donutTotal>0?Math.round(x.val/donutTotal*100):0}%)</small></div>
+                  <div className="dl-val" style={{color:"#000"}}>{x.val} <small style={{fontSize:".58rem",color:"var(--muted)"}}>({donutTotal>0?Math.round(x.val/donutTotal*100):0}%)</small></div>
                 </div>
               ))}
               <div className="dl-item" style={{marginTop:4,paddingTop:7,borderTop:"1px solid var(--border)"}}>
@@ -579,10 +579,10 @@ export default function Dashboard() {
                   <div key={g.label} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:3,flex:1}}>
                     <div style={{display:"flex",gap:3,alignItems:"flex-end",height:90}}>
                       <div style={{width:24,height:Math.max(hml,2),background:g.c,borderRadius:"3px 3px 0 0",position:"relative"}}>
-                        <span style={{position:"absolute",top:-15,left:"50%",transform:"translateX(-50%)",fontSize:".58rem",color:g.c,fontFamily:"JetBrains Mono",whiteSpace:"nowrap"}}>{g.ml}</span>
+                        <span style={{position:"absolute",top:-15,left:"50%",transform:"translateX(-50%)",fontSize:".58rem",color:"#000",fontFamily:"JetBrains Mono",whiteSpace:"nowrap"}}>{g.ml}</span>
                       </div>
                       <div style={{width:24,height:Math.max(hspk,2),background:"var(--accent2)",borderRadius:"3px 3px 0 0",position:"relative"}}>
-                        <span style={{position:"absolute",top:-15,left:"50%",transform:"translateX(-50%)",fontSize:".58rem",color:"var(--accent2)",fontFamily:"JetBrains Mono",whiteSpace:"nowrap"}}>{g.spk}</span>
+                        <span style={{position:"absolute",top:-15,left:"50%",transform:"translateX(-50%)",fontSize:".58rem",color:"#000",fontFamily:"JetBrains Mono",whiteSpace:"nowrap"}}>{g.spk}</span>
                       </div>
                     </div>
                     <div style={{fontSize:".7rem",fontWeight:700,color:g.c}}>{g.label}</div>
@@ -623,13 +623,13 @@ export default function Dashboard() {
                     const nx=r[5]===0?"Không có đơn ML trong tháng":r[5]<10?"Rất thấp, cần xác minh":"Thấp, cần hỗ trợ";
                     return (
                       <tr key={r[0]}>
-                        <td style={{color:"var(--muted)"}}>{i+1}</td>
+                        <td style={{color:"#000"}}>{i+1}</td>
                         <td style={{fontFamily:"JetBrains Mono",fontSize:".63rem",color:"var(--accent)"}}>{r[0]}</td>
                         <td><strong>{r[1]}</strong></td>
                         <td><span className={`badge ${lb}`}>{r[2]==="Nhân Viên"?"NV":"CTV"}</span></td>
                         <td><span className={`badge ${vb}`}>{r[3]==="DBSH"?"ĐBSH":"ĐTB"}</span></td>
                         <td style={{color:"var(--muted)",fontSize:".65rem"}}>{KHO_LABEL[r[4]]||r[4]}</td>
-                        <td><strong style={{color,fontFamily:"JetBrains Mono"}}>{r[5]}</strong></td>
+                        <td><strong style={{color:"#000",fontFamily:"JetBrains Mono"}}>{r[5]}</strong></td>
                         <td style={{fontFamily:"JetBrains Mono"}}>{r[6]}</td>
                         <td>{r[8]==="Tạm khóa"?<span className="badge b-bad">Tạm khóa</span>:<span className="badge b-ok">HĐ</span>}</td>
                         <td style={{color,fontSize:".66rem"}}>{nx}</td>
@@ -679,11 +679,11 @@ export default function Dashboard() {
               <table style={{width:"100%",borderCollapse:"collapse",fontSize:".68rem",whiteSpace:"nowrap"}}>
                 <thead>
                   <tr>
-                    <th style={{position:"sticky",left:0,zIndex:3,background:"var(--surface2)",minWidth:56,padding:"8px",textAlign:"center",fontSize:".63rem",color:"var(--muted)",borderBottom:"1px solid var(--border)",borderRight:"1px solid var(--border)"}}>User</th>
-                    <th style={{position:"sticky",left:56,zIndex:3,background:"var(--surface2)",minWidth:140,padding:"8px",fontSize:".63rem",color:"var(--muted)",borderBottom:"1px solid var(--border)",borderRight:"1px solid var(--border)"}}>Họ &amp; Tên</th>
-                    <th style={{position:"sticky",left:196,zIndex:3,background:"var(--surface2)",minWidth:38,padding:"8px 6px",textAlign:"center",fontSize:".63rem",color:"var(--muted)",borderBottom:"1px solid var(--border)",borderRight:"1px solid var(--border)"}}>Loại</th>
-                    {dailyDays.map(d=><th key={d} style={{background:"var(--surface2)",minWidth:30,padding:"8px 3px",textAlign:"center",fontSize:".63rem",color:"var(--muted)",borderBottom:"1px solid var(--border)"}}>{d}</th>)}
-                    <th style={{position:"sticky",right:0,zIndex:3,background:"var(--surface2)",minWidth:48,padding:"8px 6px",textAlign:"center",fontSize:".63rem",color:dailyType==="ML"?"var(--accent)":"var(--accent2)",borderBottom:"1px solid var(--border)",borderLeft:"1px solid var(--border)"}}>∑{dailyType}</th>
+                    <th style={{position:"sticky",left:0,zIndex:3,background:"var(--surface2)",minWidth:56,padding:"8px",textAlign:"center",fontSize:".63rem",color:"#000",fontWeight:700,borderBottom:"1px solid var(--border)",borderRight:"1px solid var(--border)"}}>User</th>
+                    <th style={{position:"sticky",left:56,zIndex:3,background:"var(--surface2)",minWidth:140,padding:"8px",fontSize:".63rem",color:"#000",fontWeight:700,borderBottom:"1px solid var(--border)",borderRight:"1px solid var(--border)"}}>Họ &amp; Tên</th>
+                    <th style={{position:"sticky",left:196,zIndex:3,background:"var(--surface2)",minWidth:38,padding:"8px 6px",textAlign:"center",fontSize:".63rem",color:"#000",fontWeight:700,borderBottom:"1px solid var(--border)",borderRight:"1px solid var(--border)"}}>Loại</th>
+                    {dailyDays.map(d=><th key={d} style={{background:"var(--surface2)",minWidth:30,padding:"8px 3px",textAlign:"center",fontSize:".63rem",color:"#000",fontWeight:700,borderBottom:"1px solid var(--border)"}}>{d}</th>)}
+                    <th style={{position:"sticky",right:0,zIndex:3,background:"var(--surface2)",minWidth:48,padding:"8px 6px",textAlign:"center",fontSize:".63rem",color:"#000",fontWeight:700,borderBottom:"1px solid var(--border)",borderLeft:"1px solid var(--border)"}}>∑{dailyType}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -729,13 +729,13 @@ export default function Dashboard() {
                 <div key={g.label} className="bar-item">
                   <div className="bar-name" style={{minWidth:130}}>{g.label} <span style={{fontSize:".6rem",color:"var(--muted)"}}>({g.cnt} người)</span></div>
                   <div className="bar-track"><div className="bar-fill" style={{width:`${Math.max(pct,1)}%`,background:g.color}}></div></div>
-                  <div className="bar-val" style={{color:g.color,minWidth:90}}>{g.ml.toLocaleString()} <span style={{color:"var(--muted)",fontSize:".6rem"}}>({share}%)</span></div>
+                  <div className="bar-val" style={{color:"#000",minWidth:90}}>{g.ml.toLocaleString()} <span style={{color:"var(--muted)",fontSize:".6rem"}}>({share}%)</span></div>
                 </div>
               );
             })}
           </div>
           <div style={{marginTop:14,padding:10,background:"var(--surface2)",borderRadius:8,fontSize:".7rem",color:"var(--muted)"}}>
-            ⚡ <span style={{color:"var(--text)"}}>ĐT chiếm <strong style={{color:"#2e7be4"}}>{totalML>0?Math.round(sumML(dt)/totalML*100):0}%</strong> tổng ML với {dt.length} người. TB ML/ĐT=<strong style={{color:"#2e7be4"}}>{avgML(dt)}</strong> vs NV=<strong style={{color:"#002060"}}>{avgML(nv)}</strong>.</span>
+            ⚡ <span style={{color:"var(--text)"}}>ĐT chiếm <strong style={{color:"#000"}}>{totalML>0?Math.round(sumML(dt)/totalML*100):0}%</strong> tổng ML với {dt.length} người. TB ML/ĐT=<strong style={{color:"#000"}}>{avgML(dt)}</strong> vs NV=<strong style={{color:"#000"}}>{avgML(nv)}</strong>.</span>
           </div>
         </div>
         <div className="panel">
@@ -748,7 +748,7 @@ export default function Dashboard() {
                 <div key={b.label} className="bar-item">
                   <div className="bar-name" style={{minWidth:64,fontFamily:"JetBrains Mono",fontSize:".66rem"}}>{b.label}</div>
                   <div className="bar-track"><div className="bar-fill" style={{width:`${Math.max(pct,2)}%`,background:b.color}}></div></div>
-                  <div className="bar-val" style={{color:b.color,minWidth:72}}>{b.cnt} người <span style={{color:"var(--muted)",fontSize:".58rem"}}>({share}%)</span></div>
+                  <div className="bar-val" style={{color:"#000",minWidth:72}}>{b.cnt} người <span style={{color:"var(--muted)",fontSize:".58rem"}}>({share}%)</span></div>
                 </div>
               );
             })}
