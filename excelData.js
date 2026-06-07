@@ -126,7 +126,7 @@ function khoFromName(value) {
 
   return {
     code,
-    label: FALLBACK_KHO_LABEL[code] || generatedLabel || code,
+    label: generatedLabel || FALLBACK_KHO_LABEL[code] || code,
   };
 }
 

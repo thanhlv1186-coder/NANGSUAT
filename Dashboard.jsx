@@ -185,7 +185,6 @@ export default function Dashboard() {
     const refreshExcel = async ({ silent = false } = {}) => {
       if (!silent) {
         setDataStatus(prev => ({ ...prev, loading: true }));
-        setDashboardData(emptyMonthData(selectedMonth));
       }
 
       try {
