@@ -516,7 +516,7 @@ export default function Dashboard() {
                   const lb=r[2]==="Nhân Viên"?"b-nv":r[2]==="Cộng Tác Viên"?"b-ctv":"b-dt";
                   const ll=r[2]==="Nhân Viên"?"NV":r[2]==="Cộng Tác Viên"?"CTV":"ĐT";
                   const vb=r[3]==="DBSH"?"b-vung1":"b-vung2";
-                  const vl=r[3]==="DBSH"?"ĐBSH":"ĐTB";
+                  const vl=r[3];
                   const hl=searchUID&&String(r[0]).includes(searchUID);
                   return (
                     <tr key={r[0]}>
@@ -624,7 +624,7 @@ export default function Dashboard() {
                         <td style={{fontFamily:"JetBrains Mono",fontSize:".63rem",color:"var(--accent)"}}>{r[0]}</td>
                         <td><strong>{r[1]}</strong></td>
                         <td><span className={`badge ${lb}`}>{r[2]==="Nhân Viên"?"NV":"CTV"}</span></td>
-                        <td><span className={`badge ${vb}`}>{r[3]==="DBSH"?"ĐBSH":"ĐTB"}</span></td>
+                        <td><span className={`badge ${vb}`}>{r[3]}</span></td>
                         <td style={{color:"var(--muted)",fontSize:".65rem"}}>{KHO_LABEL[r[4]]||r[4]}</td>
                         <td><strong style={{color:"#000",fontFamily:"JetBrains Mono"}}>{r[5]}</strong></td>
                         <td style={{fontFamily:"JetBrains Mono"}}>{r[6]}</td>
