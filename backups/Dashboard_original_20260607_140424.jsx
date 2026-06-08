@@ -13,7 +13,7 @@ import { EXCEL_POLL_INTERVAL_MS, loadExcelDashboardData, getExcelFileName } from
 const sumML      = a => a.reduce((s,r)=>s+r[5],0);
 const sumSPK     = a => a.reduce((s,r)=>s+r[6],0);
 const avgML      = a => a.length ? Math.round(sumML(a)/a.length) : 0;
-const colorByLoai= l => l==="Nhân Viên"?"#002060":l==="Cộng Tác Viên"?"#ffc000":l==="Tài xế"?"#00b050":"#2e7be4";
+const colorByLoai= l => l==="Nhân Viên"?"#00d4ff":l==="Cộng Tác Viên"?"#ff6b35":l==="Tài xế"?"#f59e0b":"#a78bfa";
 const getLevel   = ml => {
   if(ml===0) return {label:"ML=0",cls:"b-bad"};
   if(ml<30)  return {label:"Thấp",cls:"b-bad"};
@@ -55,23 +55,23 @@ const emptyMonthData = (month) => ({
 // ── CSS-in-JS (paste toàn bộ CSS từ HTML vào đây) ─────────────────────────
 const STYLES = `
 @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
-:root{--bg:#f4f6fb;--surface:#ffffff;--surface2:#eef2f8;--border:#d9e1ee;--accent:#002060;--accent2:#ffc000;--accent3:#00b050;--accent4:#f59e0b;--danger:#e23b3b;--text:#10254f;--muted:#64748b;--blue2:#2e7be4;--gold-ink:#8a6a00;}
+:root{--bg:#0a0e1a;--surface:#111827;--surface2:#1a2234;--border:#1e2d45;--accent:#00d4ff;--accent2:#ff6b35;--accent3:#22c55e;--accent4:#f59e0b;--danger:#ef4444;--text:#e2e8f0;--muted:#64748b;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,32,96,.03)1px,transparent 1px),linear-gradient(90deg,rgba(0,32,96,.03)1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,.03)1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.03)1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
 .wrap{position:relative;z-index:1;max-width:1440px;margin:0 auto;padding:22px;}
 header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--border);}
-.logo-area h1{font-size:1.4rem;font-weight:800;letter-spacing:-.5px;background:linear-gradient(135deg,var(--accent),#2e7be4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:10px;}
+.logo-area h1{font-size:1.4rem;font-weight:800;letter-spacing:-.5px;background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:10px;}
 .logo-area p{font-size:.75rem;color:var(--muted);margin-top:3px;}
-.badge-live{display:flex;align-items:center;gap:8px;background:rgba(0,32,96,.08);border:1px solid rgba(0,32,96,.2);padding:6px 14px;border-radius:20px;font-size:.75rem;}
+.badge-live{display:flex;align-items:center;gap:8px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.2);padding:6px 14px;border-radius:20px;font-size:.75rem;}
 .dot-live{width:8px;height:8px;border-radius:50%;background:var(--accent3);animation:pulse 1.5s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
 .vung-bar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;align-items:center;}
 .vung-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-right:4px;white-space:nowrap;}
 .vung-btn{padding:7px 16px;border-radius:8px;font-size:.75rem;cursor:pointer;font-family:'Be Vietnam Pro';border:1px solid var(--border);background:var(--surface2);color:var(--muted);transition:all .18s;white-space:nowrap;}
-.vung-btn:hover{border-color:rgba(0,32,96,.4);color:var(--text);}
-.vung-btn.active{background:rgba(0,32,96,.12);border-color:rgba(0,32,96,.45);color:var(--accent);font-weight:700;}
-.vung-btn.v-dtb.active{background:rgba(46,123,228,.12);border-color:rgba(46,123,228,.45);color:#2e7be4;}
+.vung-btn:hover{border-color:rgba(0,212,255,.4);color:var(--text);}
+.vung-btn.active{background:rgba(0,212,255,.12);border-color:rgba(0,212,255,.45);color:var(--accent);font-weight:700;}
+.vung-btn.v-dtb.active{background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.45);color:#a78bfa;}
 .vung-info{margin-left:auto;font-size:.7rem;color:var(--muted);background:var(--surface2);padding:5px 12px;border-radius:6px;border:1px solid var(--border);}
 .kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;position:relative;overflow:hidden;transition:transform .2s;}
@@ -81,44 +81,44 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .kpi.c2::after{background:linear-gradient(90deg,var(--accent2),transparent);}
 .kpi.c3::after{background:linear-gradient(90deg,var(--accent3),transparent);}
 .kpi.c4::after{background:linear-gradient(90deg,var(--accent4),transparent);}
-.kpi.c5::after{background:linear-gradient(90deg,#2e7be4,transparent);}
+.kpi.c5::after{background:linear-gradient(90deg,#a78bfa,transparent);}
 .kpi-label{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
 .kpi-val{font-size:1.9rem;font-weight:800;font-family:'JetBrains Mono',monospace;}
 .kpi.c1 .kpi-val{color:var(--accent);}
-.kpi.c2 .kpi-val{color:var(--gold-ink);}
+.kpi.c2 .kpi-val{color:var(--accent2);}
 .kpi.c3 .kpi-val{color:var(--accent3);}
-.kpi.c4 .kpi-val{color:#b9770a;}
-.kpi.c5 .kpi-val{color:#2e7be4;}
+.kpi.c4 .kpi-val{color:var(--accent4);}
+.kpi.c5 .kpi-val{color:#a78bfa;}
 .kpi-sub{font-size:.68rem;color:var(--muted);margin-top:4px;}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;}
 .row3{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:18px;}
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;overflow:hidden;}
-.panel-title{font-size:.76rem;text-transform:uppercase;letter-spacing:1px;color:#FFFF00;font-weight:700;background:#002060;padding:9px 12px;border-radius:6px;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-shrink:0;}
-.panel-title span{color:#FFFF00;}
+.panel-title{font-size:.76rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.panel-title span{color:var(--accent);}
 .bar-list{display:flex;flex-direction:column;gap:7px;}
 .bar-item{display:flex;align-items:center;gap:10px;}
 .bar-name{font-size:.7rem;color:var(--text);min-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .bar-track{flex:1;height:7px;background:var(--surface2);border-radius:4px;overflow:hidden;}
 .bar-fill{height:100%;border-radius:4px;transition:width .8s cubic-bezier(.4,0,.2,1);}
-.bar-val{font-size:.68rem;font-family:'JetBrains Mono';color:#000;min-width:34px;text-align:right;}
+.bar-val{font-size:.68rem;font-family:'JetBrains Mono';color:var(--muted);min-width:34px;text-align:right;}
 .tbl-wrap{overflow-x:auto;height:528px;overflow-y:auto;}
 .tbl-wrap::-webkit-scrollbar{width:4px;height:4px;}
 .tbl-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
 table{width:100%;border-collapse:collapse;font-size:.7rem;}
-thead th{position:sticky;top:0;z-index:2;background:#002060;padding:9px 9px;text-align:left;font-weight:700;color:#FFFF00;text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid #002060;}
-tbody tr{border-bottom:1px solid rgba(16,37,79,.08);transition:background .15s;}
+thead th{position:sticky;top:0;z-index:2;background:var(--surface2);padding:9px 9px;text-align:left;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border);}
+tbody tr{border-bottom:1px solid rgba(30,45,69,.5);transition:background .15s;}
 tbody tr:hover{background:var(--surface2);}
-tbody td{padding:8px 9px;color:#000;}
+tbody td{padding:8px 9px;}
 .badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:.63rem;font-weight:600;white-space:nowrap;}
-.b-nv{background:rgba(0,32,96,.1);color:var(--accent);}
-.b-ctv{background:rgba(255,192,0,.18);color:var(--gold-ink);}
-.b-dt{background:rgba(46,123,228,.12);color:#1d5bb8;}
-.b-tx{background:rgba(0,176,80,.14);color:#00733a;}
-.b-ok{background:rgba(0,176,80,.14);color:#00733a;}
-.b-warn{background:rgba(245,158,11,.16);color:#b9770a;}
+.b-nv{background:rgba(0,212,255,.1);color:var(--accent);}
+.b-ctv{background:rgba(255,107,53,.1);color:var(--accent2);}
+.b-dt{background:rgba(167,139,250,.1);color:#a78bfa;}
+.b-tx{background:rgba(245,158,11,.1);color:#f59e0b;}
+.b-ok{background:rgba(34,197,94,.1);color:var(--accent3);}
+.b-warn{background:rgba(245,158,11,.1);color:var(--accent4);}
 .b-bad{background:rgba(239,68,68,.1);color:var(--danger);}
-.b-vung1{background:rgba(0,32,96,.08);color:var(--accent);font-size:.6rem;}
-.b-vung2{background:rgba(46,123,228,.08);color:#2e7be4;font-size:.6rem;}
+.b-vung1{background:rgba(0,212,255,.08);color:var(--accent);font-size:.6rem;}
+.b-vung2{background:rgba(167,139,250,.08);color:#a78bfa;font-size:.6rem;}
 .mini-bar{display:inline-block;width:56px;height:9px;background:var(--surface2);border-radius:3px;overflow:hidden;vertical-align:middle;}
 .mini-fill{height:100%;border-radius:3px;}
 .donut-area{display:flex;align-items:center;gap:20px;}
@@ -127,7 +127,7 @@ tbody td{padding:8px 9px;color:#000;}
 .dl-item{display:flex;align-items:center;gap:8px;}
 .dl-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
 .dl-label{font-size:.7rem;color:var(--muted);}
-.dl-val{font-size:.78rem;font-weight:700;margin-left:auto;padding-left:10px;font-family:'JetBrains Mono';color:#000;}
+.dl-val{font-size:.78rem;font-weight:700;margin-left:auto;padding-left:10px;font-family:'JetBrains Mono';}
 .alert-list{display:flex;flex-direction:column;gap:7px;}
 .alert-item{display:flex;align-items:flex-start;gap:9px;background:var(--surface2);border-radius:7px;padding:9px 11px;border-left:3px solid;}
 .alert-item.red{border-color:var(--danger);}
@@ -139,16 +139,16 @@ tbody td{padding:8px 9px;color:#000;}
 .filter-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
 .filter-row select,.filter-row input{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:7px;font-size:.72rem;font-family:'Be Vietnam Pro';outline:none;cursor:pointer;}
 .filter-row select:focus,.filter-row input:focus{border-color:var(--accent);}
-.filter-btn{padding:6px 14px;border-radius:7px;background:rgba(0,32,96,.1);border:1px solid rgba(0,32,96,.25);color:var(--accent);font-size:.72rem;cursor:pointer;font-family:'Be Vietnam Pro';transition:background .2s;}
-.filter-btn:hover{background:rgba(0,32,96,.2);}
+.filter-btn{padding:6px 14px;border-radius:7px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.25);color:var(--accent);font-size:.72rem;cursor:pointer;font-family:'Be Vietnam Pro';transition:background .2s;}
+.filter-btn:hover{background:rgba(0,212,255,.2);}
 .count-badge{font-size:.68rem;color:var(--muted);}
 .tag-ml{width:9px;height:9px;border-radius:2px;background:var(--accent);display:inline-block;}
 .tag-spk{width:9px;height:9px;border-radius:2px;background:var(--accent2);display:inline-block;}
 .footer{text-align:center;font-size:.63rem;color:var(--muted);margin-top:22px;padding-top:14px;border-top:1px solid var(--border);}
 .month-bar{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
 .month-btn{padding:5px 11px;border-radius:7px;font-size:.72rem;cursor:pointer;font-family:'Be Vietnam Pro';border:1px solid var(--border);background:var(--surface2);color:var(--muted);transition:all .18s;white-space:nowrap;min-width:38px;text-align:center;}
-.month-btn:hover{border-color:rgba(0,32,96,.4);color:var(--text);}
-.month-btn.active{background:rgba(0,32,96,.12);border-color:rgba(0,32,96,.45);color:var(--accent);font-weight:700;}
+.month-btn:hover{border-color:rgba(0,212,255,.4);color:var(--text);}
+.month-btn.active{background:rgba(0,212,255,.12);border-color:rgba(0,212,255,.45);color:var(--accent);font-weight:700;}
 .month-btn.no-data{opacity:.4;cursor:default;}
 @media(max-width:900px){.kpi-row{grid-template-columns:repeat(3,1fr);}.row2,.row3{grid-template-columns:1fr;}}
 `;
@@ -289,10 +289,10 @@ export default function Dashboard() {
 
   // ── donut data ───────────────────────────────────────────────────────
   const donutData = [
-    {label:"Nhân Viên",    val:nv.length,  color:"#002060"},
-    {label:"Cộng Tác Viên",val:ctv.length, color:"#ffc000"},
-    {label:"Tài xế",       val:tx.length,  color:"#00b050"},
-    {label:"Đối Tác",      val:dt.length,  color:"#2e7be4"},
+    {label:"Nhân Viên",    val:nv.length,  color:"#00d4ff"},
+    {label:"Cộng Tác Viên",val:ctv.length, color:"#ff6b35"},
+    {label:"Tài xế",       val:tx.length,  color:"#f59e0b"},
+    {label:"Đối Tác",      val:dt.length,  color:"#a78bfa"},
   ];
   const donutTotal = donutData.reduce((s,x)=>s+x.val,0);
 
@@ -314,10 +314,10 @@ export default function Dashboard() {
 
   // ── comp chart ───────────────────────────────────────────────────────
   const compGroups = [
-    {label:"NV",  ml:avgML(nv),  spk:nv.length?Math.round(sumSPK(nv)/nv.length):0,  c:"#002060"},
-    {label:"CTV", ml:avgML(ctv), spk:ctv.length?Math.round(sumSPK(ctv)/ctv.length):0, c:"#ffc000"},
-    {label:"TX",  ml:avgML(tx),  spk:tx.length?Math.round(sumSPK(tx)/tx.length):0,   c:"#00b050"},
-    {label:"ĐT",  ml:avgML(dt),  spk:dt.length?Math.round(sumSPK(dt)/dt.length):0,   c:"#2e7be4"},
+    {label:"NV",  ml:avgML(nv),  spk:nv.length?Math.round(sumSPK(nv)/nv.length):0,  c:"#00d4ff"},
+    {label:"CTV", ml:avgML(ctv), spk:ctv.length?Math.round(sumSPK(ctv)/ctv.length):0, c:"#ff6b35"},
+    {label:"TX",  ml:avgML(tx),  spk:tx.length?Math.round(sumSPK(tx)/tx.length):0,   c:"#f59e0b"},
+    {label:"ĐT",  ml:avgML(dt),  spk:dt.length?Math.round(sumSPK(dt)/dt.length):0,   c:"#a78bfa"},
   ];
   const maxComp = Math.max(...compGroups.flatMap(g=>[g.ml,g.spk]),1);
 
@@ -336,10 +336,10 @@ export default function Dashboard() {
 
   // ── vs chart ─────────────────────────────────────────────────────────
   const vsGroups = [
-    {label:"Đối Tác (ĐT)", ml:sumML(dt),  cnt:dt.length,  color:"#2e7be4"},
-    {label:"Tài xế (TX)",  ml:sumML(tx),  cnt:tx.length,  color:"#00b050"},
-    {label:"Nhân Viên",    ml:sumML(nv),  cnt:nv.length,  color:"#002060"},
-    {label:"Cộng Tác Viên",ml:sumML(ctv), cnt:ctv.length, color:"#ffc000"},
+    {label:"Đối Tác (ĐT)", ml:sumML(dt),  cnt:dt.length,  color:"#a78bfa"},
+    {label:"Tài xế (TX)",  ml:sumML(tx),  cnt:tx.length,  color:"#f59e0b"},
+    {label:"Nhân Viên",    ml:sumML(nv),  cnt:nv.length,  color:"#00d4ff"},
+    {label:"Cộng Tác Viên",ml:sumML(ctv), cnt:ctv.length, color:"#ff6b35"},
   ];
   const maxVS = Math.max(...vsGroups.map(g=>g.ml),1);
 
@@ -347,10 +347,10 @@ export default function Dashboard() {
   const distBands = [
     {label:"= 0",     fn:r=>r[5]===0,                color:"#ef4444"},
     {label:"1–30",    fn:r=>r[5]>0&&r[5]<=30,        color:"#f59e0b"},
-    {label:"31–99",   fn:r=>r[5]>=31&&r[5]<=99,      color:"#d4a000"},
-    {label:"100–199", fn:r=>r[5]>=100&&r[5]<=199,    color:"#002060"},
-    {label:"200–499", fn:r=>r[5]>=200&&r[5]<=499,    color:"#00b050"},
-    {label:"≥ 500",   fn:r=>r[5]>=500,               color:"#2e7be4"},
+    {label:"31–99",   fn:r=>r[5]>=31&&r[5]<=99,      color:"#eab308"},
+    {label:"100–199", fn:r=>r[5]>=100&&r[5]<=199,    color:"#00d4ff"},
+    {label:"200–499", fn:r=>r[5]>=200&&r[5]<=499,    color:"#22c55e"},
+    {label:"≥ 500",   fn:r=>r[5]>=500,               color:"#a78bfa"},
   ].map(b=>({...b, cnt:d.filter(b.fn).length}));
   const maxDist = Math.max(...distBands.map(b=>b.cnt),1);
 
@@ -468,7 +468,7 @@ export default function Dashboard() {
                         {r[1]} <span style={{fontSize:".6rem",color:"var(--muted)"}}>({r[2]==="Nhân Viên"?"NV":"CTV"}·{r[4]})</span>
                       </div>
                       <div className="bar-track"><div className="bar-fill" style={{width:`${Math.max(pct,3)}%`,background:color}}></div></div>
-                      <div className="bar-val" style={{color:"#000"}}>{r[5]}</div>
+                      <div className="bar-val" style={{color}}>{r[5]}</div>
                     </div>
                   );
                 })
@@ -515,7 +515,7 @@ export default function Dashboard() {
                 {tableRows.map((r,i)=>{
                   const lv=getLevel(r[5]);
                   const pct=maxTableML>0?Math.round(r[5]/maxTableML*100):0;
-                  const color=r[5]===0?"#ef4444":r[5]<50?"#f59e0b":r[5]<200?"#002060":"#00b050";
+                  const color=r[5]===0?"#ef4444":r[5]<50?"#f59e0b":r[5]<200?"#00d4ff":"#22c55e";
                   const lb=r[2]==="Nhân Viên"?"b-nv":r[2]==="Cộng Tác Viên"?"b-ctv":"b-dt";
                   const ll=r[2]==="Nhân Viên"?"NV":r[2]==="Cộng Tác Viên"?"CTV":"ĐT";
                   const vb=r[3]==="DBSH"?"b-vung1":"b-vung2";
@@ -523,16 +523,16 @@ export default function Dashboard() {
                   const hl=searchUID&&String(r[0]).includes(searchUID);
                   return (
                     <tr key={r[0]}>
-                      <td style={{color:"#000"}}>{i+1}</td>
+                      <td style={{color:"var(--muted)"}}>{i+1}</td>
                       <td style={{fontFamily:"JetBrains Mono",fontSize:".68rem"}}>
-                        <span style={{background:hl?"rgba(0,32,96,.18)":undefined,color:"#000",borderRadius:hl?3:undefined,padding:hl?"1px 3px":undefined}}>{r[0]}</span>
+                        <span style={{background:hl?"rgba(0,212,255,.18)":undefined,color:"var(--accent)",borderRadius:hl?3:undefined,padding:hl?"1px 3px":undefined}}>{r[0]}</span>
                       </td>
                       <td><strong>{r[1]}</strong></td>
                       <td><span className={`badge ${lb}`}>{ll}</span></td>
                       <td><span className={`badge ${vb}`}>{vl}</span></td>
                       <td style={{color:"var(--muted)",fontSize:".66rem"}}>{KHO_LABEL[r[4]]||r[4]}</td>
-                      <td><strong style={{color:"#000",fontFamily:"JetBrains Mono"}}>{r[5]}</strong></td>
-                      <td style={{fontFamily:"JetBrains Mono",color:"#000"}}>{r[6]}</td>
+                      <td><strong style={{color,fontFamily:"JetBrains Mono"}}>{r[5]}</strong></td>
+                      <td style={{fontFamily:"JetBrains Mono",color:"var(--accent2)"}}>{r[6]}</td>
                       <td style={{fontFamily:"JetBrains Mono"}}>{r[7].toLocaleString()}</td>
                       <td><span className={`badge ${lv.cls}`}>{lv.label}</span></td>
                       <td><span className="mini-bar"><span className="mini-fill" style={{width:`${pct}%`,background:color,display:"block"}}></span></span></td>
@@ -558,7 +558,7 @@ export default function Dashboard() {
                 <div key={x.label} className="dl-item">
                   <div className="dl-dot" style={{background:x.color}}></div>
                   <div className="dl-label">{x.label}</div>
-                  <div className="dl-val" style={{color:"#000"}}>{x.val} <small style={{fontSize:".58rem",color:"var(--muted)"}}>({donutTotal>0?Math.round(x.val/donutTotal*100):0}%)</small></div>
+                  <div className="dl-val" style={{color:x.color}}>{x.val} <small style={{fontSize:".58rem",color:"var(--muted)"}}>({donutTotal>0?Math.round(x.val/donutTotal*100):0}%)</small></div>
                 </div>
               ))}
               <div className="dl-item" style={{marginTop:4,paddingTop:7,borderTop:"1px solid var(--border)"}}>
@@ -579,10 +579,10 @@ export default function Dashboard() {
                   <div key={g.label} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:3,flex:1}}>
                     <div style={{display:"flex",gap:3,alignItems:"flex-end",height:90}}>
                       <div style={{width:24,height:Math.max(hml,2),background:g.c,borderRadius:"3px 3px 0 0",position:"relative"}}>
-                        <span style={{position:"absolute",top:-15,left:"50%",transform:"translateX(-50%)",fontSize:".58rem",color:"#000",fontFamily:"JetBrains Mono",whiteSpace:"nowrap"}}>{g.ml}</span>
+                        <span style={{position:"absolute",top:-15,left:"50%",transform:"translateX(-50%)",fontSize:".58rem",color:g.c,fontFamily:"JetBrains Mono",whiteSpace:"nowrap"}}>{g.ml}</span>
                       </div>
                       <div style={{width:24,height:Math.max(hspk,2),background:"var(--accent2)",borderRadius:"3px 3px 0 0",position:"relative"}}>
-                        <span style={{position:"absolute",top:-15,left:"50%",transform:"translateX(-50%)",fontSize:".58rem",color:"#000",fontFamily:"JetBrains Mono",whiteSpace:"nowrap"}}>{g.spk}</span>
+                        <span style={{position:"absolute",top:-15,left:"50%",transform:"translateX(-50%)",fontSize:".58rem",color:"var(--accent2)",fontFamily:"JetBrains Mono",whiteSpace:"nowrap"}}>{g.spk}</span>
                       </div>
                     </div>
                     <div style={{fontSize:".7rem",fontWeight:700,color:g.c}}>{g.label}</div>
@@ -623,13 +623,13 @@ export default function Dashboard() {
                     const nx=r[5]===0?"Không có đơn ML trong tháng":r[5]<10?"Rất thấp, cần xác minh":"Thấp, cần hỗ trợ";
                     return (
                       <tr key={r[0]}>
-                        <td style={{color:"#000"}}>{i+1}</td>
+                        <td style={{color:"var(--muted)"}}>{i+1}</td>
                         <td style={{fontFamily:"JetBrains Mono",fontSize:".63rem",color:"var(--accent)"}}>{r[0]}</td>
                         <td><strong>{r[1]}</strong></td>
                         <td><span className={`badge ${lb}`}>{r[2]==="Nhân Viên"?"NV":"CTV"}</span></td>
                         <td><span className={`badge ${vb}`}>{r[3]==="DBSH"?"ĐBSH":"ĐTB"}</span></td>
                         <td style={{color:"var(--muted)",fontSize:".65rem"}}>{KHO_LABEL[r[4]]||r[4]}</td>
-                        <td><strong style={{color:"#000",fontFamily:"JetBrains Mono"}}>{r[5]}</strong></td>
+                        <td><strong style={{color,fontFamily:"JetBrains Mono"}}>{r[5]}</strong></td>
                         <td style={{fontFamily:"JetBrains Mono"}}>{r[6]}</td>
                         <td>{r[8]==="Tạm khóa"?<span className="badge b-bad">Tạm khóa</span>:<span className="badge b-ok">HĐ</span>}</td>
                         <td style={{color,fontSize:".66rem"}}>{nx}</td>
@@ -656,8 +656,8 @@ export default function Dashboard() {
               {["ML","SPK"].map(t=>(
                 <button key={t} onClick={()=>setDailyType(t)}
                   style={{padding:"5px 14px",borderRadius:6,fontSize:".72rem",cursor:"pointer",fontFamily:"Be Vietnam Pro",
-                    border:dailyType===t?(t==="ML"?"1px solid rgba(0,32,96,.4)":"1px solid rgba(255,192,0,.4)"):"1px solid var(--border)",
-                    background:dailyType===t?(t==="ML"?"rgba(0,32,96,.15)":"rgba(255,192,0,.15)"):"var(--surface2)",
+                    border:dailyType===t?(t==="ML"?"1px solid rgba(0,212,255,.4)":"1px solid rgba(255,107,53,.4)"):"1px solid var(--border)",
+                    background:dailyType===t?(t==="ML"?"rgba(0,212,255,.15)":"rgba(255,107,53,.15)"):"var(--surface2)",
                     color:dailyType===t?(t==="ML"?"var(--accent)":"var(--accent2)"):"var(--muted)",
                     fontWeight:dailyType===t?700:400}}>
                   {t==="ML"?"🧊 Máy Lạnh":"📦 Sản Phẩm Khác"}
@@ -679,11 +679,11 @@ export default function Dashboard() {
               <table style={{width:"100%",borderCollapse:"collapse",fontSize:".68rem",whiteSpace:"nowrap"}}>
                 <thead>
                   <tr>
-                    <th style={{position:"sticky",left:0,zIndex:3,background:"#002060",minWidth:56,padding:"8px",textAlign:"center",fontSize:".63rem",color:"#FFFF00",fontWeight:700,borderBottom:"1px solid var(--border)",borderRight:"1px solid var(--border)"}}>User</th>
-                    <th style={{position:"sticky",left:56,zIndex:3,background:"#002060",minWidth:140,padding:"8px",fontSize:".63rem",color:"#FFFF00",fontWeight:700,borderBottom:"1px solid var(--border)",borderRight:"1px solid var(--border)"}}>Họ &amp; Tên</th>
-                    <th style={{position:"sticky",left:196,zIndex:3,background:"#002060",minWidth:38,padding:"8px 6px",textAlign:"center",fontSize:".63rem",color:"#FFFF00",fontWeight:700,borderBottom:"1px solid var(--border)",borderRight:"1px solid var(--border)"}}>Loại</th>
-                    {dailyDays.map(d=><th key={d} style={{background:"#002060",minWidth:30,padding:"8px 3px",textAlign:"center",fontSize:".63rem",color:"#FFFF00",fontWeight:700,borderBottom:"1px solid var(--border)"}}>{d}</th>)}
-                    <th style={{position:"sticky",right:0,zIndex:3,background:"#002060",minWidth:48,padding:"8px 6px",textAlign:"center",fontSize:".63rem",color:"#FFFF00",fontWeight:700,borderBottom:"1px solid var(--border)",borderLeft:"1px solid var(--border)"}}>∑{dailyType}</th>
+                    <th style={{position:"sticky",left:0,zIndex:3,background:"var(--surface2)",minWidth:56,padding:"8px",textAlign:"center",fontSize:".63rem",color:"var(--muted)",borderBottom:"1px solid var(--border)",borderRight:"1px solid var(--border)"}}>User</th>
+                    <th style={{position:"sticky",left:56,zIndex:3,background:"var(--surface2)",minWidth:140,padding:"8px",fontSize:".63rem",color:"var(--muted)",borderBottom:"1px solid var(--border)",borderRight:"1px solid var(--border)"}}>Họ &amp; Tên</th>
+                    <th style={{position:"sticky",left:196,zIndex:3,background:"var(--surface2)",minWidth:38,padding:"8px 6px",textAlign:"center",fontSize:".63rem",color:"var(--muted)",borderBottom:"1px solid var(--border)",borderRight:"1px solid var(--border)"}}>Loại</th>
+                    {dailyDays.map(d=><th key={d} style={{background:"var(--surface2)",minWidth:30,padding:"8px 3px",textAlign:"center",fontSize:".63rem",color:"var(--muted)",borderBottom:"1px solid var(--border)"}}>{d}</th>)}
+                    <th style={{position:"sticky",right:0,zIndex:3,background:"var(--surface2)",minWidth:48,padding:"8px 6px",textAlign:"center",fontSize:".63rem",color:dailyType==="ML"?"var(--accent)":"var(--accent2)",borderBottom:"1px solid var(--border)",borderLeft:"1px solid var(--border)"}}>∑{dailyType}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -701,7 +701,7 @@ export default function Dashboard() {
                           ? r.dayVals.map((v,di)=>{
                               if(v===0) return <td key={di} style={{textAlign:"center",padding:"5px 3px",color:"var(--border)",fontSize:".62rem"}}>·</td>;
                               const heat=Math.min(Math.round(v/maxDayVal*100),100);
-                              const bg=dailyType==="ML"?`rgba(0,32,96,${(heat/100*0.55+0.08).toFixed(2)})`:`rgba(255,192,0,${(heat/100*0.55+0.08).toFixed(2)})`;
+                              const bg=dailyType==="ML"?`rgba(0,212,255,${(heat/100*0.55+0.08).toFixed(2)})`:`rgba(255,107,53,${(heat/100*0.55+0.08).toFixed(2)})`;
                               const txtColor=heat>55?"#fff":dailyType==="ML"?"var(--accent)":"var(--accent2)";
                               return <td key={di} style={{textAlign:"center",padding:"5px 3px",background:bg,borderRadius:3,fontFamily:"JetBrains Mono",fontSize:".62rem",fontWeight:600,color:txtColor}}>{v}</td>;
                             })
@@ -729,13 +729,13 @@ export default function Dashboard() {
                 <div key={g.label} className="bar-item">
                   <div className="bar-name" style={{minWidth:130}}>{g.label} <span style={{fontSize:".6rem",color:"var(--muted)"}}>({g.cnt} người)</span></div>
                   <div className="bar-track"><div className="bar-fill" style={{width:`${Math.max(pct,1)}%`,background:g.color}}></div></div>
-                  <div className="bar-val" style={{color:"#000",minWidth:90}}>{g.ml.toLocaleString()} <span style={{color:"var(--muted)",fontSize:".6rem"}}>({share}%)</span></div>
+                  <div className="bar-val" style={{color:g.color,minWidth:90}}>{g.ml.toLocaleString()} <span style={{color:"var(--muted)",fontSize:".6rem"}}>({share}%)</span></div>
                 </div>
               );
             })}
           </div>
           <div style={{marginTop:14,padding:10,background:"var(--surface2)",borderRadius:8,fontSize:".7rem",color:"var(--muted)"}}>
-            ⚡ <span style={{color:"var(--text)"}}>ĐT chiếm <strong style={{color:"#000"}}>{totalML>0?Math.round(sumML(dt)/totalML*100):0}%</strong> tổng ML với {dt.length} người. TB ML/ĐT=<strong style={{color:"#000"}}>{avgML(dt)}</strong> vs NV=<strong style={{color:"#000"}}>{avgML(nv)}</strong>.</span>
+            ⚡ <span style={{color:"var(--text)"}}>ĐT chiếm <strong style={{color:"#a78bfa"}}>{totalML>0?Math.round(sumML(dt)/totalML*100):0}%</strong> tổng ML với {dt.length} người. TB ML/ĐT=<strong style={{color:"#a78bfa"}}>{avgML(dt)}</strong> vs NV=<strong style={{color:"#00d4ff"}}>{avgML(nv)}</strong>.</span>
           </div>
         </div>
         <div className="panel">
@@ -748,7 +748,7 @@ export default function Dashboard() {
                 <div key={b.label} className="bar-item">
                   <div className="bar-name" style={{minWidth:64,fontFamily:"JetBrains Mono",fontSize:".66rem"}}>{b.label}</div>
                   <div className="bar-track"><div className="bar-fill" style={{width:`${Math.max(pct,2)}%`,background:b.color}}></div></div>
-                  <div className="bar-val" style={{color:"#000",minWidth:72}}>{b.cnt} người <span style={{color:"var(--muted)",fontSize:".58rem"}}>({share}%)</span></div>
+                  <div className="bar-val" style={{color:b.color,minWidth:72}}>{b.cnt} người <span style={{color:"var(--muted)",fontSize:".58rem"}}>({share}%)</span></div>
                 </div>
               );
             })}
