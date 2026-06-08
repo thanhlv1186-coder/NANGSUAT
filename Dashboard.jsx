@@ -212,7 +212,7 @@ export default function Dashboard() {
     };
   }, [selectedMonth]);
 
-  const RAW = dashboardData.raw;
+  const RAW = dashboardData.raw.filter(r => r[2] !== "Tài xế");
   const DAILY = dashboardData.daily;
   const KHO_LABEL = dashboardData.khoLabel;
   const VUNG_INFO = dashboardData.vungInfo;
@@ -290,7 +290,6 @@ export default function Dashboard() {
   const donutData = [
     {label:"Nhân Viên",    val:nv.length,  color:"#002060"},
     {label:"Cộng Tác Viên",val:ctv.length, color:"#ffc000"},
-    {label:"Tài xế",       val:tx.length,  color:"#00b050"},
     {label:"Đối Tác",      val:dt.length,  color:"#2e7be4"},
   ];
   const donutTotal = donutData.reduce((s,x)=>s+x.val,0);
@@ -315,7 +314,6 @@ export default function Dashboard() {
   const compGroups = [
     {label:"NV",  ml:avgML(nv),  spk:nv.length?Math.round(sumSPK(nv)/nv.length):0,  c:"#002060"},
     {label:"CTV", ml:avgML(ctv), spk:ctv.length?Math.round(sumSPK(ctv)/ctv.length):0, c:"#ffc000"},
-    {label:"TX",  ml:avgML(tx),  spk:tx.length?Math.round(sumSPK(tx)/tx.length):0,   c:"#00b050"},
     {label:"ĐT",  ml:avgML(dt),  spk:dt.length?Math.round(sumSPK(dt)/dt.length):0,   c:"#2e7be4"},
   ];
   const maxComp = Math.max(...compGroups.flatMap(g=>[g.ml,g.spk]),1);
@@ -327,7 +325,7 @@ export default function Dashboard() {
   const tk = d.filter(r=>r[8]==="Tạm khóa");
   if(tk.length) alerts.push({t:"amber",i:"🔒",p:`${tk.length} nhân sự Tạm Khóa`,s:tk.map(r=>r[1]).join(", ")});
   const dtML = sumML(dt);
-  if(totalML>0) alerts.push({t:"amber",i:"💡",p:`ĐT: ${Math.round(dtML/totalML*100)}% tổng ML (${dt.length} người) · TX: ${tx.length} người`,s:`TB ML/ĐT=${avgML(dt)} | TX=${avgML(tx)} | NV=${avgML(nv)}`});
+  if(totalML>0) alerts.push({t:"amber",i:"💡",p:`ĐT: ${Math.round(dtML/totalML*100)}% tổng ML (${dt.length} người)`,s:`TB ML/ĐT=${avgML(dt)} | NV=${avgML(nv)}`});
   if(!alerts.length) alerts.push({t:"green",i:"✅",p:"Không có cảnh báo đặc biệt",s:"Tất cả chỉ số trong ngưỡng bình thường"});
 
   // ── low table ────────────────────────────────────────────────────────
@@ -336,7 +334,6 @@ export default function Dashboard() {
   // ── vs chart ─────────────────────────────────────────────────────────
   const vsGroups = [
     {label:"Đối Tác (ĐT)", ml:sumML(dt),  cnt:dt.length,  color:"#2e7be4"},
-    {label:"Tài xế (TX)",  ml:sumML(tx),  cnt:tx.length,  color:"#00b050"},
     {label:"Nhân Viên",    ml:sumML(nv),  cnt:nv.length,  color:"#002060"},
     {label:"Cộng Tác Viên",ml:sumML(ctv), cnt:ctv.length, color:"#ffc000"},
   ];
@@ -418,10 +415,10 @@ export default function Dashboard() {
       {/* KPI */}
       <div className="kpi-row">
         {[
-          {c:"c1",label:"Tổng Nhân Sự",  val:d.length,            sub:`NV ${nv.length} · CTV ${ctv.length} · TX ${tx.length} · ĐT ${dt.length}`},
+          {c:"c1",label:"Tổng Nhân Sự",  val:d.length,            sub:`NV ${nv.length} · CTV ${ctv.length} · ĐT ${dt.length}`},
           {c:"c2",label:"Tổng ML",       val:totalML.toLocaleString(), sub:"Máy lạnh lắp đặt trong tháng"},
           {c:"c3",label:"Tổng SPK",      val:totalSPK.toLocaleString(),sub:"Sản phẩm khác"},
-          {c:"c4",label:"TB ML/Người",   val:avgML(d),              sub:`NV:${avgML(nv)} · CTV:${avgML(ctv)} · TX:${avgML(tx)} · ĐT:${avgML(dt)}`},
+          {c:"c4",label:"TB ML/Người",   val:avgML(d),              sub:`NV:${avgML(nv)} · CTV:${avgML(ctv)} · ĐT:${avgML(dt)}`},
           {c:"c5",label:"Cảnh Báo Thấp", val:zeroML+lowML,          sub:`ML=0: ${zeroML} · ML<50: ${lowML}`},
         ].map(k=>(
           <div key={k.label} className={`kpi ${k.c}`}>
@@ -487,7 +484,6 @@ export default function Dashboard() {
               <option value="">Tất cả loại</option>
               <option value="Nhân Viên">Nhân Viên</option>
               <option value="Cộng Tác Viên">Cộng Tác Viên</option>
-              <option value="Tài xế">Tài xế</option>
               <option value="8 - ĐỐI TÁC GHLĐ">Đối Tác</option>
             </select>
             <select value={selMuc} onChange={e=>setSelMuc(e.target.value)}>
@@ -563,7 +559,7 @@ export default function Dashboard() {
                 </div>
               ))}
               <div className="dl-item" style={{marginTop:4,paddingTop:7,borderTop:"1px solid var(--border)"}}>
-                <div className="dl-label" style={{fontSize:".63rem",width:"100%"}}>TB ML: NV={avgML(nv)} · CTV={avgML(ctv)} · TX={avgML(tx)} · ĐT={avgML(dt)}</div>
+                <div className="dl-label" style={{fontSize:".63rem",width:"100%"}}>TB ML: NV={avgML(nv)} · CTV={avgML(ctv)} · ĐT={avgML(dt)}</div>
               </div>
             </div>
           </div>
