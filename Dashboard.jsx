@@ -356,11 +356,13 @@ export default function Dashboard() {
 
   // ── vung info text ────────────────────────────────────────────────────
   const vi = VUNG_INFO[activeVung] || VUNG_INFO.ALL;
-  const vungOptions = ["ALL", ...Object.keys(VUNG_INFO).filter(v=>v!=="ALL")];
+  const stripVung = s => (s||"").replace(/^Vùng\s+/i,"");
+  const presentVungs = new Set(RAW.map(r=>r[3]));
+  const vungOptions = ["ALL", ...Object.keys(VUNG_INFO).filter(v=>v!=="ALL" && presentVungs.has(v))];
   const vungLabel = v => v==="ALL" ? "🌐 Tất cả"
     : v==="DBSH" ? "🔵 Đồng Bằng Sông Hồng"
     : v==="DTB" ? "🟣 Đông Tây Bắc"
-    : VUNG_INFO[v]?.name || v;
+    : stripVung(VUNG_INFO[v]?.name || v);
   const loadedAtText = formatLoadedAt(dashboardData.loadedAt);
   const dataStatusText = dataStatus.loading
     ? "Đang đọc Excel..."
@@ -384,7 +386,7 @@ export default function Dashboard() {
             <img src={LOGO_B64} alt="Thợ ĐMX" style={{height:38,width:"auto",borderRadius:6,padding:"2px 4px",objectFit:"contain"}} />
             Dashboard Năng Suất Lắp Đặt
           </h1>
-          <p>Điện Máy Xanh · {META.label} · {vi.name}</p>
+          <p>Điện Máy Xanh · {META.label} · {stripVung(vi.name)}</p>
         </div>
         <div className="badge-live" title={dataStatusTitle}><span className="dot-live"></span> {dataStatusText}</div>
       </header>
@@ -411,7 +413,7 @@ export default function Dashboard() {
             {vungLabel(v)}
           </button>
         ))}
-        <span className="vung-info">{vi.name} · {d.length} nhân sự</span>
+        <span className="vung-info">{stripVung(vi.name)} · {d.length} nhân sự</span>
       </div>
 
       {/* KPI */}
