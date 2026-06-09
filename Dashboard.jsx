@@ -58,7 +58,6 @@ const STYLES = `
 :root{--bg:#f4f6fb;--surface:#ffffff;--surface2:#eef2f8;--border:#d9e1ee;--accent:#002060;--accent2:#ffc000;--accent3:#00b050;--accent4:#f59e0b;--danger:#e23b3b;--text:#10254f;--muted:#64748b;--blue2:#2e7be4;--gold-ink:#8a6a00;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
-body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,32,96,.03)1px,transparent 1px),linear-gradient(90deg,rgba(0,32,96,.03)1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
 .wrap{position:relative;z-index:1;max-width:1440px;margin:0 auto;padding:22px;}
 header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--border);}
 .logo-area h1{font-size:1.4rem;font-weight:800;letter-spacing:-.5px;background:linear-gradient(135deg,var(--accent),#2e7be4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:10px;}
@@ -213,7 +212,7 @@ export default function Dashboard() {
     };
   }, [selectedMonth]);
 
-  const RAW = dashboardData.raw;
+  const RAW = dashboardData.raw.filter(r => r[2] !== "Tài xế");
   const DAILY = dashboardData.daily;
   const KHO_LABEL = dashboardData.khoLabel;
   const VUNG_INFO = dashboardData.vungInfo;
@@ -291,7 +290,6 @@ export default function Dashboard() {
   const donutData = [
     {label:"Nhân Viên",    val:nv.length,  color:"#002060"},
     {label:"Cộng Tác Viên",val:ctv.length, color:"#ffc000"},
-    {label:"Tài xế",       val:tx.length,  color:"#00b050"},
     {label:"Đối Tác",      val:dt.length,  color:"#2e7be4"},
   ];
   const donutTotal = donutData.reduce((s,x)=>s+x.val,0);
@@ -316,7 +314,6 @@ export default function Dashboard() {
   const compGroups = [
     {label:"NV",  ml:avgML(nv),  spk:nv.length?Math.round(sumSPK(nv)/nv.length):0,  c:"#002060"},
     {label:"CTV", ml:avgML(ctv), spk:ctv.length?Math.round(sumSPK(ctv)/ctv.length):0, c:"#ffc000"},
-    {label:"TX",  ml:avgML(tx),  spk:tx.length?Math.round(sumSPK(tx)/tx.length):0,   c:"#00b050"},
     {label:"ĐT",  ml:avgML(dt),  spk:dt.length?Math.round(sumSPK(dt)/dt.length):0,   c:"#2e7be4"},
   ];
   const maxComp = Math.max(...compGroups.flatMap(g=>[g.ml,g.spk]),1);
@@ -328,7 +325,7 @@ export default function Dashboard() {
   const tk = d.filter(r=>r[8]==="Tạm khóa");
   if(tk.length) alerts.push({t:"amber",i:"🔒",p:`${tk.length} nhân sự Tạm Khóa`,s:tk.map(r=>r[1]).join(", ")});
   const dtML = sumML(dt);
-  if(totalML>0) alerts.push({t:"amber",i:"💡",p:`ĐT: ${Math.round(dtML/totalML*100)}% tổng ML (${dt.length} người) · TX: ${tx.length} người`,s:`TB ML/ĐT=${avgML(dt)} | TX=${avgML(tx)} | NV=${avgML(nv)}`});
+  if(totalML>0) alerts.push({t:"amber",i:"💡",p:`ĐT: ${Math.round(dtML/totalML*100)}% tổng ML (${dt.length} người)`,s:`TB ML/ĐT=${avgML(dt)} | NV=${avgML(nv)}`});
   if(!alerts.length) alerts.push({t:"green",i:"✅",p:"Không có cảnh báo đặc biệt",s:"Tất cả chỉ số trong ngưỡng bình thường"});
 
   // ── low table ────────────────────────────────────────────────────────
@@ -337,7 +334,6 @@ export default function Dashboard() {
   // ── vs chart ─────────────────────────────────────────────────────────
   const vsGroups = [
     {label:"Đối Tác (ĐT)", ml:sumML(dt),  cnt:dt.length,  color:"#2e7be4"},
-    {label:"Tài xế (TX)",  ml:sumML(tx),  cnt:tx.length,  color:"#00b050"},
     {label:"Nhân Viên",    ml:sumML(nv),  cnt:nv.length,  color:"#002060"},
     {label:"Cộng Tác Viên",ml:sumML(ctv), cnt:ctv.length, color:"#ffc000"},
   ];
@@ -356,11 +352,13 @@ export default function Dashboard() {
 
   // ── vung info text ────────────────────────────────────────────────────
   const vi = VUNG_INFO[activeVung] || VUNG_INFO.ALL;
-  const vungOptions = ["ALL", ...Object.keys(VUNG_INFO).filter(v=>v!=="ALL")];
+  const stripVung = s => (s||"").replace(/^Vùng\s+/i,"");
+  const presentVungs = new Set(RAW.map(r=>r[3]));
+  const vungOptions = ["ALL", ...Object.keys(VUNG_INFO).filter(v=>v!=="ALL" && presentVungs.has(v))];
   const vungLabel = v => v==="ALL" ? "🌐 Tất cả"
     : v==="DBSH" ? "🔵 Đồng Bằng Sông Hồng"
     : v==="DTB" ? "🟣 Đông Tây Bắc"
-    : VUNG_INFO[v]?.name || v;
+    : stripVung(VUNG_INFO[v]?.name || v);
   const loadedAtText = formatLoadedAt(dashboardData.loadedAt);
   const dataStatusText = dataStatus.loading
     ? "Đang đọc Excel..."
@@ -384,7 +382,7 @@ export default function Dashboard() {
             <img src={LOGO_B64} alt="Thợ ĐMX" style={{height:38,width:"auto",borderRadius:6,padding:"2px 4px",objectFit:"contain"}} />
             Dashboard Năng Suất Lắp Đặt
           </h1>
-          <p>Điện Máy Xanh · {META.label} · {vi.name}</p>
+          <p>Điện Máy Xanh · {META.label} · {stripVung(vi.name)}</p>
         </div>
         <div className="badge-live" title={dataStatusTitle}><span className="dot-live"></span> {dataStatusText}</div>
       </header>
@@ -411,16 +409,16 @@ export default function Dashboard() {
             {vungLabel(v)}
           </button>
         ))}
-        <span className="vung-info">{vi.name} · {d.length} nhân sự</span>
+        <span className="vung-info">{stripVung(vi.name)} · {d.length} nhân sự</span>
       </div>
 
       {/* KPI */}
       <div className="kpi-row">
         {[
-          {c:"c1",label:"Tổng Nhân Sự",  val:d.length,            sub:`NV ${nv.length} · CTV ${ctv.length} · TX ${tx.length} · ĐT ${dt.length}`},
+          {c:"c1",label:"Tổng Nhân Sự",  val:d.length,            sub:`NV ${nv.length} · CTV ${ctv.length} · ĐT ${dt.length}`},
           {c:"c2",label:"Tổng ML",       val:totalML.toLocaleString(), sub:"Máy lạnh lắp đặt trong tháng"},
           {c:"c3",label:"Tổng SPK",      val:totalSPK.toLocaleString(),sub:"Sản phẩm khác"},
-          {c:"c4",label:"TB ML/Người",   val:avgML(d),              sub:`NV:${avgML(nv)} · CTV:${avgML(ctv)} · TX:${avgML(tx)} · ĐT:${avgML(dt)}`},
+          {c:"c4",label:"TB ML/Người",   val:avgML(d),              sub:`NV:${avgML(nv)} · CTV:${avgML(ctv)} · ĐT:${avgML(dt)}`},
           {c:"c5",label:"Cảnh Báo Thấp", val:zeroML+lowML,          sub:`ML=0: ${zeroML} · ML<50: ${lowML}`},
         ].map(k=>(
           <div key={k.label} className={`kpi ${k.c}`}>
@@ -486,7 +484,6 @@ export default function Dashboard() {
               <option value="">Tất cả loại</option>
               <option value="Nhân Viên">Nhân Viên</option>
               <option value="Cộng Tác Viên">Cộng Tác Viên</option>
-              <option value="Tài xế">Tài xế</option>
               <option value="8 - ĐỐI TÁC GHLĐ">Đối Tác</option>
             </select>
             <select value={selMuc} onChange={e=>setSelMuc(e.target.value)}>
@@ -519,7 +516,7 @@ export default function Dashboard() {
                   const lb=r[2]==="Nhân Viên"?"b-nv":r[2]==="Cộng Tác Viên"?"b-ctv":"b-dt";
                   const ll=r[2]==="Nhân Viên"?"NV":r[2]==="Cộng Tác Viên"?"CTV":"ĐT";
                   const vb=r[3]==="DBSH"?"b-vung1":"b-vung2";
-                  const vl=r[3]==="DBSH"?"ĐBSH":"ĐTB";
+                  const vl=r[3];
                   const hl=searchUID&&String(r[0]).includes(searchUID);
                   return (
                     <tr key={r[0]}>
@@ -562,7 +559,7 @@ export default function Dashboard() {
                 </div>
               ))}
               <div className="dl-item" style={{marginTop:4,paddingTop:7,borderTop:"1px solid var(--border)"}}>
-                <div className="dl-label" style={{fontSize:".63rem",width:"100%"}}>TB ML: NV={avgML(nv)} · CTV={avgML(ctv)} · TX={avgML(tx)} · ĐT={avgML(dt)}</div>
+                <div className="dl-label" style={{fontSize:".63rem",width:"100%"}}>TB ML: NV={avgML(nv)} · CTV={avgML(ctv)} · ĐT={avgML(dt)}</div>
               </div>
             </div>
           </div>
@@ -627,7 +624,7 @@ export default function Dashboard() {
                         <td style={{fontFamily:"JetBrains Mono",fontSize:".63rem",color:"var(--accent)"}}>{r[0]}</td>
                         <td><strong>{r[1]}</strong></td>
                         <td><span className={`badge ${lb}`}>{r[2]==="Nhân Viên"?"NV":"CTV"}</span></td>
-                        <td><span className={`badge ${vb}`}>{r[3]==="DBSH"?"ĐBSH":"ĐTB"}</span></td>
+                        <td><span className={`badge ${vb}`}>{r[3]}</span></td>
                         <td style={{color:"var(--muted)",fontSize:".65rem"}}>{KHO_LABEL[r[4]]||r[4]}</td>
                         <td><strong style={{color:"#000",fontFamily:"JetBrains Mono"}}>{r[5]}</strong></td>
                         <td style={{fontFamily:"JetBrains Mono"}}>{r[6]}</td>
